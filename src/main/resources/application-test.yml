@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rms_test_db
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    com.rms: DEBUG
