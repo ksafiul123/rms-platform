@@ -1,6 +1,5 @@
 package dev.safi.restaurant_management_system.entity;
 
-import dev.safi.restaurant_management_system.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,25 +12,29 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
- * Enhanced Role Entity with Permission Support
+ * Custom Role - Restaurant-specific custom roles
  */
 @Entity
-@Table(name = "roles")
+@Table(name = "custom_roles", indexes = {
+        @Index(name = "idx_custom_role_restaurant", columnList = "restaurant_id"),
+        @Index(name = "idx_custom_role_name", columnList = "name, restaurant_id")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class CustomRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
-    @Enumerated(EnumType.STRING)
-    private RoleName name;
+    @Column(name = "restaurant_id", nullable = false)
+    private Long restaurantId;
+
+    @Column(nullable = false, length = 100)
+    private String name;
 
     @Column(length = 100)
     private String displayName;
@@ -39,22 +42,23 @@ public class Role {
     @Column(length = 500)
     private String description;
 
-    @Column(name = "role_level")
-    private Integer roleLevel;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "based_on_role_id")
+    private Role basedOnRole;
 
-    @Column(name = "is_system")
-    private Boolean isSystem = true;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "custom_role_permissions",
+            joinColumns = @JoinColumn(name = "custom_role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private Set<Permission> permissions = new HashSet<>();
 
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
-    )
-    private Set<Permission> permissions = new HashSet<>();
+    @Column(name = "created_by")
+    private Long createdBy;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -64,4 +68,3 @@ public class Role {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
-

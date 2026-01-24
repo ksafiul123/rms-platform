@@ -1,6 +1,6 @@
 package dev.safi.restaurant_management_system.repository;
 
-import dev.safi.restaurant_management_system.entity.OnboardingStatus;
+import dev.safi.restaurant_management_system.enums.OnboardingStatus;
 import dev.safi.restaurant_management_system.entity.RestaurantOnboarding;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

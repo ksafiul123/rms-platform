@@ -1,4 +1,4 @@
-package dev.safi.restaurant_management_system.entity;
+package dev.safi.restaurant_management_system.enums;
 
 public enum FeatureName {
     DINE_IN,

@@ -1,5 +1,6 @@
 package dev.safi.restaurant_management_system.entity;
 
+import dev.safi.restaurant_management_system.enums.OnboardingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

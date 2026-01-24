@@ -1,18 +1,31 @@
 package dev.safi.restaurant_management_system.repository;
 
 import dev.safi.restaurant_management_system.entity.Role;
+import dev.safi.restaurant_management_system.enums.RoleName;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
- * Role Repository
+ * Enhanced Role Repository
  */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    Optional<Role> findByName(String name);
+    Optional<Role> findByName(RoleName name);
 
-    Boolean existsByName(String name);
+    List<Role> findByIsActiveTrueOrderByRoleLevelAsc();
+
+    @Query("SELECT r FROM Role r LEFT JOIN FETCH r.permissions WHERE r.name = :name")
+    Optional<Role> findByNameWithPermissions(@Param("name") RoleName name);
+
+    @Query("SELECT r FROM Role r LEFT JOIN FETCH r.permissions WHERE r.id = :id")
+    Optional<Role> findByIdWithPermissions(@Param("id") Long id);
+
+    @Query("SELECT r FROM Role r WHERE r.roleLevel < :level AND r.isActive = true")
+    List<Role> findManageableRoles(@Param("level") Integer level);
 }

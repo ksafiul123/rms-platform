@@ -1,9 +1,9 @@
-package dev.safi.restaurant_management_system.entity;
+package dev.safi.restaurant_management_system.enums;
 
 /**
  * Enums
  */
-enum RoleName {
+public enum RoleName {
     ROLE_SUPER_ADMIN,
     ROLE_DEVELOPER,
     ROLE_SALESMAN,

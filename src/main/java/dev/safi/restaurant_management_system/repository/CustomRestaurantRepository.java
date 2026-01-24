@@ -1,7 +1,7 @@
 package dev.safi.restaurant_management_system.repository;
 
 import dev.safi.restaurant_management_system.entity.Restaurant;
-import dev.safi.restaurant_management_system.entity.SubscriptionStatus;
+import dev.safi.restaurant_management_system.enums.SubscriptionStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package dev.safi.restaurant_management_system.security;
 
-import com.rms.entity.User;
+import dev.safi.restaurant_management_system.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

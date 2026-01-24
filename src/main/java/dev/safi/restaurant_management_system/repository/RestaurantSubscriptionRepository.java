@@ -1,7 +1,7 @@
 package dev.safi.restaurant_management_system.repository;
 
 import dev.safi.restaurant_management_system.entity.RestaurantSubscription;
-import dev.safi.restaurant_management_system.entity.SubscriptionStatus;
+import dev.safi.restaurant_management_system.enums.SubscriptionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

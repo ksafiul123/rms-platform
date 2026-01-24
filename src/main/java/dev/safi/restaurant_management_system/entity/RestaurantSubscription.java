@@ -1,5 +1,7 @@
 package dev.safi.restaurant_management_system.entity;
 
+import dev.safi.restaurant_management_system.enums.BillingCycle;
+import dev.safi.restaurant_management_system.enums.SubscriptionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

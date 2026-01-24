@@ -1,9 +1,9 @@
-package dev.safi.restaurant_management_system.entity;
+package dev.safi.restaurant_management_system.enums;
 
 /**
  * Enums
  */
-enum BusinessType {
+public enum BusinessType {
     FINE_DINING,
     CASUAL_DINING,
     FAST_FOOD,

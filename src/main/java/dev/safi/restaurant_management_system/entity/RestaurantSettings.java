@@ -2,6 +2,7 @@ package dev.safi.restaurant_management_system.entity;
 
 //package com.rms.entity;
 
+import dev.safi.restaurant_management_system.enums.BusinessType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

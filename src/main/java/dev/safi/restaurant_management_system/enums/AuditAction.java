@@ -1,0 +1,14 @@
+package dev.safi.restaurant_management_system.enums;
+
+public enum AuditAction {
+    ACCESS_GRANTED,
+    ACCESS_DENIED,
+    PERMISSION_ADDED,
+    PERMISSION_REMOVED,
+    ROLE_ASSIGNED,
+    ROLE_REMOVED,
+    CUSTOM_ROLE_CREATED,
+    CUSTOM_ROLE_MODIFIED,
+    PERMISSION_OVERRIDE_GRANTED,
+    PERMISSION_OVERRIDE_REVOKED
+}

@@ -1,6 +1,6 @@
 package dev.safi.restaurant_management_system.repository;
 
-import dev.safi.restaurant_management_system.entity.FeatureName;
+import dev.safi.restaurant_management_system.enums.FeatureName;
 import dev.safi.restaurant_management_system.entity.RestaurantFeature;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
