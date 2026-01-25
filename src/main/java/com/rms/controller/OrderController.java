@@ -159,4 +159,36 @@ public class OrderController {
         return ResponseEntity.ok(
                 ApiResponse.success("Your deliveries retrieved successfully", orders));
     }
+
+    /**
+     * Add these endpoints to OrderController
+     */
+
+    @PostMapping("/session/{sessionId}/orders")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<OrderResponse>> createSessionOrder(
+            @PathVariable Long sessionId,
+            @Valid @RequestBody CreateOrderRequest request,
+            @CurrentUser UserPrincipal currentUser) {
+
+        OrderResponse order = orderService.createSessionOrder(sessionId, request, currentUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Order created successfully", order));
+    }
+
+    @GetMapping("/session/{sessionId}/orders")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<List<OrderSummaryResponse>>> getSessionOrders(
+            @PathVariable Long sessionId,
+            @CurrentUser UserPrincipal currentUser) {
+
+        List<OrderSummaryResponse> orders = orderService.getSessionOrders(
+                sessionId, currentUser);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("Session orders retrieved successfully", orders));
+    }
+
+
 }

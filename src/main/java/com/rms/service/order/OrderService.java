@@ -4,9 +4,9 @@ package com.rms.service.order;
 
 import com.rms.dto.order.OrderDTO.*;
 import com.rms.entity.*;
-import dev.safi.restaurant_management_system.entity.*;
+import com.rms.entity.*;
 import com.rms.exception.BadRequestException;
-import dev.safi.restaurant_management_system.exception.ForbiddenException;
+import com.rms.exception.ForbiddenException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.OrderRepository;
 import com.rms.repository.UserRepository;
@@ -452,4 +452,49 @@ public class OrderService {
         response.setCreatedAt(history.getCreatedAt());
         return response;
     }
+
+    /**
+     * Validate order modifications for session orders
+     *
+     * Usage: Call this in OrderService.updateOrderStatus
+     */
+    public void validateSessionOrderUpdate(Order order, UserPrincipal currentUser) {
+        if (order.getTableSession() != null) {
+            TableSession session = order.getTableSession();
+
+            // Session must be active for new orders or modifications
+            if (session.getStatus() != TableSession.SessionStatus.ACTIVE &&
+                    order.getStatus() == Order.OrderStatus.PENDING) {
+                throw new BadRequestException("Cannot create orders in inactive session");
+            }
+
+            // Verify user is part of session for customer operations
+            if (currentUser.hasRole("CUSTOMER")) {
+                boolean isGuest = session.getGuests().stream()
+                        .anyMatch(g -> g.getUserId() != null &&
+                                g.getUserId().equals(currentUser.getId()) &&
+                                g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
+
+                if (!isGuest) {
+                    throw new ForbiddenException("You are not part of this session");
+                }
+            }
+        }
+    }
+
+    /**
+     * Update session total when order is updated
+     *
+     * Usage: Call this in OrderService after order updates
+     */
+    public void updateSessionTotal(Order order) {
+        if (order.getTableSession() != null) {
+            TableSession session = order.getTableSession();
+            session.recalculateTotalAmount();
+            sessionRepository.save(session);
+            log.info("Session {} total updated to {}",
+                    session.getId(), session.getTotalAmount());
+        }
+    }
+}
 }

@@ -1,7 +1,5 @@
 package com.rms.entity;
 
-//package com.rms.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,6 +48,10 @@ public class Order {
 
     @Column(name = "table_number", length = 10)
     private String tableNumber; // For dine-in orders
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "table_session_id")
+    private TableSession tableSession; // Link to table session for QR orders
 
     @Column(name = "delivery_address", columnDefinition = "TEXT")
     private String deliveryAddress; // For delivery orders
