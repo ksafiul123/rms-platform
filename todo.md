@@ -114,7 +114,7 @@
 
 ---
 
-## 🚚 PHASE 9 – LIVE ORDER TRACKING
+## ✅🚚 PHASE 9 – LIVE ORDER TRACKING
 
 - [ ] Order status broadcasting
 - [ ] Kitchen → Delivery → Customer flow
@@ -124,7 +124,7 @@
 
 ---
 
-## 🔔 PHASE 10 – NOTIFICATION SYSTEM
+## ✅🔔 PHASE 10 – NOTIFICATION SYSTEM
 
 - [ ] Email notification service
 - [ ] WhatsApp notification hooks
