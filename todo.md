@@ -144,7 +144,7 @@
 
 ---
 
-## 💳 PHASE 12 – PAYMENT & WALLET SYSTEM
+## ✅💳 PHASE 12 – PAYMENT & WALLET SYSTEM
 
 - [ ] Online payment gateway integration
 - [ ] Internal wallet ledger
