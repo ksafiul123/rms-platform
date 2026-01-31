@@ -134,7 +134,7 @@
 
 ---
 
-## 🎮 PHASE 11 – WAITING-TIME GAMES & REWARDS
+## ✅🎮 PHASE 11 – WAITING-TIME GAMES & REWARDS
 
 - [ ] Game session tracking
 - [ ] Multiplayer table-based session logic
