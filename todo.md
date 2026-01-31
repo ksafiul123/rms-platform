@@ -155,7 +155,7 @@
 
 ---
 
-## 🏦 PHASE 13 – SETTLEMENT & PAYOUT
+## ✅🏦 PHASE 13 – SETTLEMENT & PAYOUT
 
 - [ ] Restaurant earnings dashboard
 - [ ] Manual settlement workflow
