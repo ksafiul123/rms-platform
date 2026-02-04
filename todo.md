@@ -164,7 +164,7 @@
 
 ---
 
-## 📺 PHASE 14 – LIVE MONITOR / TV DISPLAY
+## ✅📺 PHASE 14 – LIVE MONITOR / TV DISPLAY
 
 - [ ] Read-only live order APIs
 - [ ] Order number & status display
@@ -173,7 +173,7 @@
 
 ---
 
-## 📊 PHASE 15 – ANALYTICS & REPORTING
+## ✅📊 PHASE 15 – ANALYTICS & REPORTING
 
 - [ ] Sales analytics
 - [ ] Popular item reports
