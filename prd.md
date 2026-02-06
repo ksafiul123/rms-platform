@@ -234,6 +234,14 @@ Customers can:
 - Fail-safe payment handling
 - Graceful degradation
 
+### 5.6 Performance & Hardening
+- Database indexing & query optimization
+- Transaction boundary review for hot paths
+- Caching for frequently accessed data (Redis)
+- API rate limiting and abuse protection
+- Audit logging for critical operations
+- Security review and dependency scanning
+
 ---
 
 ## 6. Tech Stack (Proposed)
@@ -322,4 +330,3 @@ Customers can:
 | Stakeholder | TBD | Pending |
 
 ---
-
