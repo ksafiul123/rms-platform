@@ -96,6 +96,16 @@ app:
     allow-credentials: true
     max-age: 3600
 
+  qr:
+    base-url: ${QR_BASE_URL:http://localhost:8080}
+    size: ${QR_CODE_SIZE:300}
+    storage-path: ${QR_STORAGE_PATH:./qr-codes}
+
+  table:
+    max-session-duration: ${MAX_SESSION_DURATION:12}
+    max-guests-per-session: ${MAX_GUESTS_PER_SESSION:20}
+    allow-anonymous-guests: ${ALLOW_ANONYMOUS_GUESTS:true}
+
 # Logging
 logging:
   level:
@@ -136,43 +146,26 @@ management:
       prometheus:
         enabled: true
 
-        # Add these configurations to application.yml
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
 
-        app:
-          qr:
-            base-url: ${QR_BASE_URL:http://localhost:8080}
-            size: ${QR_CODE_SIZE:300}
-            # Directory to store QR code images (optional - if storing as files)
-            storage-path: ${QR_STORAGE_PATH:./qr-codes}
+app:
+  qr:
+    base-url: http://localhost:8080
+    size: 300
 
-          table:
-            # Maximum session duration before auto-close (in hours)
-            max-session-duration: ${MAX_SESSION_DURATION:12}
-            # Maximum guests per table session
-            max-guests-per-session: ${MAX_GUESTS_PER_SESSION:20}
-            # Allow anonymous guests
-            allow-anonymous-guests: ${ALLOW_ANONYMOUS_GUESTS:true}
+---
+# Production profile
+spring:
+  config:
+    activate:
+      on-profile: prod
 
-        ---
-        # Development profile
-        spring:
-          config:
-            activate:
-              on-profile: dev
-
-        app:
-          qr:
-            base-url: http://localhost:8080
-            size: 300
-
-        ---
-        # Production profile
-        spring:
-          config:
-            activate:
-              on-profile: prod
-
-        app:
-          qr:
-            base-url: https://yourdomain.com
-            size: 400
+app:
+  qr:
+    base-url: https://yourdomain.com
+    size: 400

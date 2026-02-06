@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * User Custom Role Assignment
  */
 @Entity
-@Table(name = "user_custom_roles", indexes = {
+@jakarta.persistence.Table(name = "user_custom_roles", indexes = {
         @Index(name = "idx_user_custom_role_user", columnList = "user_id"),
         @Index(name = "idx_user_custom_role_restaurant", columnList = "restaurant_id")
 })

@@ -62,8 +62,10 @@ public class TableSessionService {
         TableSessionGuest host = new TableSessionGuest();
         if (currentUser != null) {
             host.setUserId(currentUser.getId());
-            User user = userRepository.findById(currentUser.getId()).orElse(null);
-            host.setGuestName(user != null ? user.getName() : "Guest");
+            String guestName = userRepository.findById(currentUser.getId())
+                    .map(User::getFullName)
+                    .orElse("Guest");
+            host.setGuestName(guestName);
         } else {
             host.setGuestName(request.getGuestName() != null ?
                     request.getGuestName() : "Anonymous Guest");
@@ -112,8 +114,10 @@ public class TableSessionService {
         TableSessionGuest guest = new TableSessionGuest();
         if (currentUser != null) {
             guest.setUserId(currentUser.getId());
-            User user = userRepository.findById(currentUser.getId()).orElse(null);
-            guest.setGuestName(user != null ? user.getName() : "Guest");
+            String guestName = userRepository.findById(currentUser.getId())
+                    .map(User::getFullName)
+                    .orElse("Guest");
+            guest.setGuestName(guestName);
         } else {
             guest.setGuestName(request.getGuestName() != null ?
                     request.getGuestName() : "Anonymous Guest");

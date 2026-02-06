@@ -1,8 +1,12 @@
 package com.rms.controller;
 
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.restaurant.*;
-import dev.safi.restaurant_management_system.dto.restaurant.*;
+import com.rms.dto.restaurant.OnboardingStatusResponse;
+import com.rms.dto.restaurant.RestaurantListResponse;
+import com.rms.dto.restaurant.SalesmanPerformanceResponse;
+import com.rms.dto.restaurant.SubscriptionPlanResponse;
+import com.rms.dto.restaurant.SubscriptionResponse;
+import com.rms.enums.OnboardingStatus;
 import com.rms.service.restaurant.SalesmanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

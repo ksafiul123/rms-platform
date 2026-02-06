@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * Restaurant Subscription - Track restaurant subscription status
  */
 @Entity
-@Table(name = "restaurant_subscriptions", indexes = {
+@jakarta.persistence.Table(name = "restaurant_subscriptions", indexes = {
         @Index(name = "idx_restaurant_sub_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_restaurant_sub_status", columnList = "status"),
         @Index(name = "idx_restaurant_sub_expiry", columnList = "expiry_date")

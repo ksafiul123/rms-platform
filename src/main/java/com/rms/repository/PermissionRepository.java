@@ -3,7 +3,6 @@ package com.rms.repository;
 //package com.rms.repository;
 
 import com.rms.entity.Permission;
-import dev.safi.restaurant_management_system.entity.*;
 import com.rms.enums.ActionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -42,5 +41,4 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
             @Param("action") ActionType action
     );
 }
-
 

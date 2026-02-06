@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "display_configurations", indexes = {
+@jakarta.persistence.Table(name = "display_configurations", indexes = {
         @Index(name = "idx_display_restaurant", columnList = "restaurant_id")
 })
 @Getter

@@ -1,12 +1,18 @@
 package com.rms.controller;
 
-import com.rms.dto.auth.*;
-import dev.safi.restaurant_management_system.dto.auth.*;
+import com.rms.dto.auth.ApiResponse;
+import com.rms.dto.auth.AuthResponse;
+import com.rms.dto.auth.LoginRequest;
+import com.rms.dto.auth.RegisterRequest;
+import com.rms.dto.auth.RestaurantInfo;
+import com.rms.dto.auth.RestaurantRegisterRequest;
+import com.rms.dto.auth.TokenRefreshRequest;
+import com.rms.dto.auth.TokenRefreshResponse;
+import com.rms.dto.auth.UserInfo;
 import com.rms.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,12 +43,12 @@ public class AuthController {
             description = "Authenticate user and return JWT tokens"
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
                     description = "Login successful",
                     content = @Content(schema = @Schema(implementation = AuthResponse.class))
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "401",
                     description = "Invalid credentials"
             )
@@ -61,12 +67,12 @@ public class AuthController {
             description = "Register a new customer account"
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "201",
                     description = "Registration successful",
                     content = @Content(schema = @Schema(implementation = AuthResponse.class))
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "400",
                     description = "Email or phone already exists"
             )
@@ -86,16 +92,16 @@ public class AuthController {
             description = "Onboard a new restaurant with admin account (Salesman/Super Admin only)"
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "201",
                     description = "Restaurant registered successfully",
                     content = @Content(schema = @Schema(implementation = ApiResponse.class))
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "400",
                     description = "Restaurant email already exists"
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "403",
                     description = "Access denied"
             )
@@ -115,12 +121,12 @@ public class AuthController {
             description = "Get new access token using refresh token"
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
                     description = "Token refreshed successfully",
                     content = @Content(schema = @Schema(implementation = TokenRefreshResponse.class))
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "400",
                     description = "Invalid or expired refresh token"
             )
@@ -140,7 +146,7 @@ public class AuthController {
             description = "Revoke refresh token and clear session"
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
                     description = "Logout successful"
             )
@@ -162,12 +168,12 @@ public class AuthController {
             description = "Retrieve authenticated user's profile information"
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
                     description = "User profile retrieved",
                     content = @Content(schema = @Schema(implementation = UserInfo.class))
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "401",
                     description = "Unauthorized"
             )
@@ -191,4 +197,3 @@ public class AuthController {
         );
     }
 }
-

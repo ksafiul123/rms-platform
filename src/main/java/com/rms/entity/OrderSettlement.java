@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order_settlements", indexes = {
+@jakarta.persistence.Table(name = "order_settlements", indexes = {
         @Index(name = "idx_settlement_order", columnList = "order_id"),
         @Index(name = "idx_settlement_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_settlement_status", columnList = "settlement_status"),

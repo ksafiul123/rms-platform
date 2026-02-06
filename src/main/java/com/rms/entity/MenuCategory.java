@@ -19,7 +19,7 @@ import java.util.Set;
  * Menu Category - Organize menu items into categories
  */
 @Entity
-@Table(name = "menu_categories", indexes = {
+@jakarta.persistence.Table(name = "menu_categories", indexes = {
         @Index(name = "idx_category_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_category_parent", columnList = "parent_category_id"),
         @Index(name = "idx_category_active", columnList = "restaurant_id, is_active")

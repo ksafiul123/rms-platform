@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Ingredient - For inventory tracking
  */
 @Entity
-@Table(name = "ingredients", indexes = {
+@jakarta.persistence.Table(name = "ingredients", indexes = {
         @Index(name = "idx_ingredient_restaurant", columnList = "restaurant_id")
 })
 @Data

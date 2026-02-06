@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Salesman - Track sales team who onboard restaurants
  */
 @Entity
-@Table(name = "salesmen", indexes = {
+@jakarta.persistence.Table(name = "salesmen", indexes = {
         @Index(name = "idx_salesman_user", columnList = "user_id"),
         @Index(name = "idx_salesman_code", columnList = "salesman_code")
 })

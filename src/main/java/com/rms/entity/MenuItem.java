@@ -17,7 +17,7 @@ import java.time.LocalTime;
  * Menu Item - Individual food/beverage items
  */
 @Entity
-@Table(name = "menu_items", indexes = {
+@jakarta.persistence.Table(name = "menu_items", indexes = {
         @Index(name = "idx_item_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_item_category", columnList = "category_id"),
         @Index(name = "idx_item_sku", columnList = "sku"),

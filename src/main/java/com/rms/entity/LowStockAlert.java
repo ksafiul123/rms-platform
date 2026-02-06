@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Tracks low stock alerts for inventory items
  */
 @Entity
-@Table(name = "low_stock_alerts",
+@jakarta.persistence.Table(name = "low_stock_alerts",
         indexes = {
                 @Index(name = "idx_low_stock_inventory", columnList = "inventory_item_id"),
                 @Index(name = "idx_low_stock_restaurant", columnList = "restaurant_id"),

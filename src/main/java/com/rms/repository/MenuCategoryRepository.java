@@ -3,7 +3,6 @@ package com.rms.repository;
 //package com.rms.repository;
 
 import com.rms.entity.MenuCategory;
-import dev.safi.restaurant_management_system.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,4 +34,3 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long
     @Query("SELECT c FROM MenuCategory c LEFT JOIN FETCH c.subCategories WHERE c.id = :id")
     Optional<MenuCategory> findByIdWithSubCategories(@Param("id") Long id);
 }
-

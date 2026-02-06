@@ -2,6 +2,7 @@ package com.rms.security.aspect;
 
 import com.rms.entity.PermissionAuditLog;
 import com.rms.enums.AuditAction;
+import com.rms.exception.InsufficientPermissionException;
 import com.rms.repository.PermissionAuditLogRepository;
 import com.rms.security.UserPrincipal;
 import com.rms.security.annotation.RequireAllPermissions;
@@ -15,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.lang.classfile.MethodSignature;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
