@@ -7,16 +7,19 @@ import com.rms.entity.*;
 import com.rms.entity.*;
 import com.rms.exception.BadRequestException;
 import com.rms.exception.ForbiddenException;
+import com.rms.exception.InsufficientStockException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.OrderRepository;
 import com.rms.repository.UserRepository;
 import com.rms.security.UserPrincipal;
+import com.rms.service.InventoryService;
 import com.rms.service.menu.MenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -33,12 +36,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final MenuService menuService;
+    private final InventoryService inventoryService;
 
     private static final BigDecimal TAX_RATE = new BigDecimal("0.10"); // 10% tax
     private static final BigDecimal DELIVERY_FEE = new BigDecimal("5.00");
     private static final int PREPARATION_TIME_MINUTES = 30;
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE, timeout = 10)
     public OrderResponse createOrder(CreateOrderRequest request, UserPrincipal currentUser) {
         log.info("Creating order for user: {} in restaurant: {}",
                 currentUser.getId(), currentUser.getRestaurantId());
@@ -49,6 +53,17 @@ public class OrderService {
         // Validate customer role
         if (!currentUser.hasRole("CUSTOMER")) {
             throw new ForbiddenException("Only customers can create orders");
+        }
+
+        for (OrderItemRequest item : request.getItems()) {
+            boolean available = inventoryService.checkAndReserve(
+                    item.getMenuItemId(),
+                    item.getQuantity()
+            );
+            if (!available) {
+                throw new InsufficientStockException(
+                        String.format("Insufficient stock for menu item %s", item.getMenuItemId()));
+            }
         }
 
         Order order = new Order();

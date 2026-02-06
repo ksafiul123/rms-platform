@@ -46,6 +46,10 @@ public class Order {
     @Column(name = "status", nullable = false, length = 20)
     private OrderStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false, length = 20)
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
     @Column(name = "table_number", length = 10)
     private String tableNumber; // For dine-in orders
 
@@ -134,5 +138,11 @@ public class Order {
         OUT_FOR_DELIVERY, // Delivery man picked up
         COMPLETED,      // Order delivered/picked up
         CANCELLED       // Order cancelled
+    }
+
+    public enum PaymentStatus {
+        PENDING,
+        PAID,
+        REFUNDED
     }
 }
