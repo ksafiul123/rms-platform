@@ -36,6 +36,14 @@ public class PaymentService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
+        // Process payment with provider
+        String transactionId = paymentProvider.charge(request);
+
+        // Update payment record
+        Payment payment = createPayment(order, transactionId, request);
+        paymentRepository.save(payment);
+
+        // Update order status
         String transactionId = paymentProvider.charge(request);
 
         Payment payment = createPayment(order, transactionId, request);
