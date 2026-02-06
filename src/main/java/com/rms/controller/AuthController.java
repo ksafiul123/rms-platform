@@ -1,7 +1,14 @@
 package com.rms.controller;
 
-import com.rms.dto.auth.*;
-import dev.safi.restaurant_management_system.dto.auth.*;
+import com.rms.dto.auth.ApiResponse;
+import com.rms.dto.auth.AuthResponse;
+import com.rms.dto.auth.LoginRequest;
+import com.rms.dto.auth.RegisterRequest;
+import com.rms.dto.auth.RestaurantInfo;
+import com.rms.dto.auth.RestaurantRegisterRequest;
+import com.rms.dto.auth.TokenRefreshRequest;
+import com.rms.dto.auth.TokenRefreshResponse;
+import com.rms.dto.auth.UserInfo;
 import com.rms.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -191,4 +198,3 @@ public class AuthController {
         );
     }
 }
-

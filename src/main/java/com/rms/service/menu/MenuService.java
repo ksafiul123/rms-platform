@@ -1,18 +1,41 @@
 package com.rms.service.menu;
 
-//package com.rms.service.menu;
-
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.menu.*;
-import com.rms.entity.*;
-import com.rms.repository.*;
-import dev.safi.restaurant_management_system.dto.menu.*;
-import dev.safi.restaurant_management_system.entity.*;
+import com.rms.dto.menu.BulkAvailabilityRequest;
+import com.rms.dto.menu.CategoryRequest;
+import com.rms.dto.menu.CategoryResponse;
+import com.rms.dto.menu.ItemIngredientRequest;
+import com.rms.dto.menu.ItemVariantRequest;
+import com.rms.dto.menu.ItemVariantResponse;
+import com.rms.dto.menu.MenuItemRequest;
+import com.rms.dto.menu.MenuItemResponse;
+import com.rms.dto.menu.MenuStatsResponse;
+import com.rms.dto.menu.ModifierGroupRequest;
+import com.rms.dto.menu.ModifierGroupResponse;
+import com.rms.dto.menu.ModifierOptionRequest;
+import com.rms.dto.menu.ModifierOptionResponse;
+import com.rms.entity.Ingredient;
+import com.rms.entity.ItemIngredient;
+import com.rms.entity.ItemModifier;
+import com.rms.entity.ItemVariant;
+import com.rms.entity.MenuCategory;
+import com.rms.entity.MenuItem;
+import com.rms.entity.ModifierGroup;
+import com.rms.entity.ModifierOption;
+import com.rms.entity.PriceSchedule;
+import com.rms.repository.IngredientRepository;
+import com.rms.repository.ItemIngredientRepository;
+import com.rms.repository.ItemModifierRepository;
+import com.rms.repository.ItemVariantRepository;
+import com.rms.repository.MenuCategoryRepository;
+import com.rms.repository.MenuItemRepository;
+import com.rms.repository.ModifierGroupRepository;
+import com.rms.repository.ModifierOptionRepository;
+import com.rms.repository.PriceScheduleRepository;
 import com.rms.enums.ItemType;
 import com.rms.enums.SelectionType;
 import com.rms.exception.BadRequestException;
 import com.rms.exception.ResourceNotFoundException;
-import dev.safi.restaurant_management_system.repository.*;
 import com.rms.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +45,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
