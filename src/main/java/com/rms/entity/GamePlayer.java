@@ -3,6 +3,11 @@ package com.rms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @jakarta.persistence.Table(name = "game_players", indexes = {
         @Index(name = "idx_game_player_session", columnList = "game_session_id"),

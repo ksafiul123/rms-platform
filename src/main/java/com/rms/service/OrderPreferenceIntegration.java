@@ -2,6 +2,7 @@ package com.rms.service;
 
 //package com.rms.service;
 
+import com.rms.dto.PreferenceDTO;
 import com.rms.entity.Order;
 import com.rms.entity.OrderItem;
 import com.rms.security.UserPrincipal;
@@ -77,8 +78,8 @@ public class OrderPreferenceIntegration {
      *         ApiResponse.success("Order preferences retrieved", summary));
      * }
      */
-    public OrderPreferencesSummary getOrderPreferencesForKitchen(Order order,
-                                                                 UserPrincipal currentUser) {
+    public PreferenceDTO.OrderPreferencesSummary getOrderPreferencesForKitchen(Order order,
+                                                                               UserPrincipal currentUser) {
         return preferenceService.getOrderPreferences(order, currentUser);
     }
 }

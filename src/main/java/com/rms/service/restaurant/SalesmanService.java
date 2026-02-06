@@ -1,10 +1,7 @@
 package com.rms.service.restaurant;
 
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.restaurant.OnboardingStatusResponse;
-import com.rms.dto.restaurant.SalesmanPerformanceResponse;
-import com.rms.dto.restaurant.SubscriptionPlanResponse;
-import com.rms.dto.restaurant.SubscriptionResponse;
+import com.rms.dto.restaurant.*;
 import com.rms.entity.Restaurant;
 import com.rms.entity.RestaurantOnboarding;
 import com.rms.entity.RestaurantSubscription;
