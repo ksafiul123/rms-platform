@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * Refresh Token for JWT rotation
  */
 @Entity
-@Table(name = "refresh_tokens", indexes = {
+@jakarta.persistence.Table(name = "refresh_tokens", indexes = {
         @Index(name = "idx_refresh_token", columnList = "token"),
         @Index(name = "idx_refresh_user", columnList = "user_id")
 })

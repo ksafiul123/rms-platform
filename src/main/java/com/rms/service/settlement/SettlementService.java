@@ -38,7 +38,7 @@ public class SettlementService {
     private final RestaurantRepository restaurantRepository;
 
     @Retryable(
-            value = {OptimisticLockingFailureException.class},
+            retryFor = {OptimisticLockingFailureException.class},
             maxAttempts = 3,
             backoff = @Backoff(delay = 1000, multiplier = 2)
     )

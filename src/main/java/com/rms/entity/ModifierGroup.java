@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Modifier Group - Group of modifiers (e.g., "Choose Your Spice Level")
  */
 @Entity
-@Table(name = "modifier_groups", indexes = {
+@jakarta.persistence.Table(name = "modifier_groups", indexes = {
         @Index(name = "idx_modifier_group_restaurant", columnList = "restaurant_id")
 })
 @Data

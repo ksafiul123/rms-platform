@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Subscription Plan - Define subscription tiers
  */
 @Entity
-@Table(name = "subscription_plans")
+@jakarta.persistence.Table(name = "subscription_plans")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "table_sessions",
+@jakarta.persistence.Table(name = "table_sessions",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"session_code"})
         },

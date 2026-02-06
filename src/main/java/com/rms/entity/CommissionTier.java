@@ -6,7 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "commission_tiers", indexes = {
+@jakarta.persistence.Table(name = "commission_tiers", indexes = {
         @Index(name = "idx_tier_rule", columnList = "commission_rule_id")
 })
 @Getter

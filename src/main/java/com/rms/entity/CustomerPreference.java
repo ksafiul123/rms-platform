@@ -18,7 +18,7 @@ import java.util.List;
  * Visible to chefs to prepare food according to customer preferences
  */
 @Entity
-@Table(name = "customer_preferences",
+@jakarta.persistence.Table(name = "customer_preferences",
         indexes = {
                 @Index(name = "idx_customer_pref_customer", columnList = "customer_id")
         }

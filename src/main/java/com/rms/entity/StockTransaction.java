@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Tracks all inventory stock movements (in/out)
  */
 @Entity
-@Table(name = "stock_transactions",
+@jakarta.persistence.Table(name = "stock_transactions",
         indexes = {
                 @Index(name = "idx_stock_transaction_inventory", columnList = "inventory_item_id"),
                 @Index(name = "idx_stock_transaction_type", columnList = "transaction_type"),

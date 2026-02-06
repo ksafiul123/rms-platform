@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "customer_wallets", indexes = {
+@jakarta.persistence.Table(name = "customer_wallets", indexes = {
         @Index(name = "idx_wallet_customer", columnList = "customer_id"),
         @Index(name = "idx_wallet_restaurant", columnList = "restaurant_id")
 })

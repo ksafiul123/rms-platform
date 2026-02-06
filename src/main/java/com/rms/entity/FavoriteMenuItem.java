@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * Tracks customer's favorite menu items across different restaurants
  */
 @Entity
-@Table(name = "favorite_menu_items",
+@jakarta.persistence.Table(name = "favorite_menu_items",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"customer_id", "menu_item_id"})
         },

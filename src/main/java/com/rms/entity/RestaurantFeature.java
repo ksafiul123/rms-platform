@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Restaurant Features - Feature toggles for each restaurant
  */
 @Entity
-@Table(name = "restaurant_features", indexes = {
+@jakarta.persistence.Table(name = "restaurant_features", indexes = {
         @Index(name = "idx_restaurant_features_restaurant", columnList = "restaurant_id")
 })
 @Data

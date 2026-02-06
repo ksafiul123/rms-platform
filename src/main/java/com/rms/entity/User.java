@@ -16,7 +16,7 @@ import java.util.Set;
  * User entity with RBAC support
  */
 @Entity
-@Table(name = "users", indexes = {
+@jakarta.persistence.Table(name = "users", indexes = {
         @Index(name = "idx_user_email", columnList = "email"),
         @Index(name = "idx_user_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_user_phone", columnList = "phone_number")

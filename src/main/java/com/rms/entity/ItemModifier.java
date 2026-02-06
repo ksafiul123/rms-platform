@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * Item Modifier - Link menu items to modifier groups
  */
 @Entity
-@Table(name = "item_modifiers", indexes = {
+@jakarta.persistence.Table(name = "item_modifiers", indexes = {
         @Index(name = "idx_item_modifier_item", columnList = "menu_item_id"),
         @Index(name = "idx_item_modifier_group", columnList = "modifier_group_id")
 })

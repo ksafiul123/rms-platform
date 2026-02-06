@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * Overrides global preferences for specific items
  */
 @Entity
-@Table(name = "menu_item_preferences",
+@jakarta.persistence.Table(name = "menu_item_preferences",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"customer_id", "menu_item_id"})
         },

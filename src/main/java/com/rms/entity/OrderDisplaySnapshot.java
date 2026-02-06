@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order_display_snapshots", indexes = {
+@jakarta.persistence.Table(name = "order_display_snapshots", indexes = {
         @Index(name = "idx_snapshot_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_snapshot_status", columnList = "display_status"),
         @Index(name = "idx_snapshot_updated", columnList = "last_updated")
