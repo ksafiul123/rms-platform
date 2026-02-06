@@ -11,9 +11,6 @@ import com.rms.repository.*;
 import com.rms.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -322,7 +319,7 @@ public class CustomerPreferenceService {
         summary.setCustomerId(order.getCustomerId());
 
         User customer = userRepository.findById(order.getCustomerId()).orElse(null);
-        summary.setCustomerName(customer != null ? customer.getName() : "Customer");
+        summary.setCustomerName(customer != null ? customer.getFullName() : "Customer");
 
         // Global preferences
         CustomerPreference globalPref = preferenceRepository

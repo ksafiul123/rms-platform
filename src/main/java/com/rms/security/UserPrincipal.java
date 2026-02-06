@@ -60,4 +60,26 @@ public class UserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return isActive;
     }
+
+    public boolean hasRole(String role) {
+        String normalizedRole = normalizeRole(role);
+        return authorities.stream()
+                .anyMatch(auth -> auth.getAuthority().equals(normalizedRole));
+    }
+
+    public boolean hasAnyRole(String... roles) {
+        for (String role : roles) {
+            if (hasRole(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String normalizeRole(String role) {
+        if (role == null || role.isBlank()) {
+            return role;
+        }
+        return role.startsWith("ROLE_") ? role : "ROLE_" + role;
+    }
 }
