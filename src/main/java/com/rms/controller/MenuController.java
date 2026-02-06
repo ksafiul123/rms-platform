@@ -3,8 +3,19 @@ package com.rms.controller;
 //package com.rms.controller;
 
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.menu.*;
-import dev.safi.restaurant_management_system.dto.menu.*;
+import com.rms.dto.menu.BulkAvailabilityRequest;
+import com.rms.dto.menu.CategoryRequest;
+import com.rms.dto.menu.CategoryResponse;
+import com.rms.dto.menu.ItemIngredientRequest;
+import com.rms.dto.menu.ItemVariantRequest;
+import com.rms.dto.menu.ItemVariantResponse;
+import com.rms.dto.menu.MenuItemRequest;
+import com.rms.dto.menu.MenuItemResponse;
+import com.rms.dto.menu.MenuStatsResponse;
+import com.rms.dto.menu.ModifierGroupRequest;
+import com.rms.dto.menu.ModifierGroupResponse;
+import com.rms.dto.menu.ModifierOptionRequest;
+import com.rms.dto.menu.ModifierOptionResponse;
 import com.rms.security.annotation.RequirePermission;
 import com.rms.service.menu.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -246,4 +257,3 @@ public class MenuController {
                 .body(menuService.createModifierGroup(restaurantId, request));
     }
 }
-

@@ -4,6 +4,7 @@ package com.rms.exception;
  * Global Exception Handler
  */
 
+import com.rms.dto.auth.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Map<String, String>>> handleValidationExceptions(
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        io.swagger.v3.oas.annotations.responses.ApiResponse<Map<String, String>> response = io.swagger.v3.oas.annotations.responses.ApiResponse.<Map<String, String>>builder()
+        ApiResponse<Map<String, String>> response = ApiResponse.<Map<String, String>>builder()
                 .success(false)
                 .message("Validation failed")
                 .data(errors)
@@ -41,43 +42,42 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Void>> handleBadCredentials(BadCredentialsException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleBadCredentials(BadCredentialsException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(io.swagger.v3.oas.annotations.responses.ApiResponse.error("Invalid email or password"));
+                .body(ApiResponse.error("Invalid email or password"));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Void>> handleUserNotFound(UsernameNotFoundException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleUserNotFound(UsernameNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(io.swagger.v3.oas.annotations.responses.ApiResponse.error("User not found"));
+                .body(ApiResponse.error("User not found"));
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
         return ResponseEntity.badRequest()
-                .body(io.swagger.v3.oas.annotations.responses.ApiResponse.error(ex.getMessage()));
+                .body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(io.swagger.v3.oas.annotations.responses.ApiResponse.error(ex.getMessage()));
+                .body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(TokenRefreshException.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Void>> handleTokenRefreshException(TokenRefreshException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleTokenRefreshException(TokenRefreshException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(io.swagger.v3.oas.annotations.responses.ApiResponse.error(ex.getMessage()));
+                .body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<io.swagger.v3.oas.annotations.responses.ApiResponse<Void>> handleGenericException(Exception ex) {
+    public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
         log.error("Unhandled exception occurred", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(io.swagger.v3.oas.annotations.responses.ApiResponse.error("An unexpected error occurred"));
+                .body(ApiResponse.error("An unexpected error occurred"));
     }
 }
-
 
 
 
