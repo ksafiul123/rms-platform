@@ -65,12 +65,6 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ApiResponse<Void>> handleForbidden(ForbiddenException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ApiResponse.error(ex.getMessage()));
-    }
-
     @ExceptionHandler(TokenRefreshException.class)
     public ResponseEntity<ApiResponse<Void>> handleTokenRefreshException(TokenRefreshException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -84,6 +78,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("An unexpected error occurred"));
     }
 }
+
 
 
 
