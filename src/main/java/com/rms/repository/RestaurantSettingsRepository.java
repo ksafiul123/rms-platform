@@ -3,7 +3,6 @@ package com.rms.repository;
 //package com.rms.repository;
 
 import com.rms.entity.RestaurantSettings;
-import dev.safi.restaurant_management_system.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +18,3 @@ public interface RestaurantSettingsRepository extends JpaRepository<RestaurantSe
 
     Boolean existsByRestaurantId(Long restaurantId);
 }
-
