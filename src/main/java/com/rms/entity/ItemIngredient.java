@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * Item Ingredient - Recipe ingredients for menu items
  */
 @Entity
-@Table(name = "item_ingredients", indexes = {
+@jakarta.persistence.Table(name = "item_ingredients", indexes = {
         @Index(name = "idx_item_ingredient_item", columnList = "menu_item_id"),
         @Index(name = "idx_item_ingredient_ingredient", columnList = "ingredient_id")
 })

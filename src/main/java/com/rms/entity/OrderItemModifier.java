@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "order_item_modifiers", indexes = {
+@jakarta.persistence.Table(name = "order_item_modifiers", indexes = {
         @Index(name = "idx_order_item_id", columnList = "order_item_id")
 })
 @Data

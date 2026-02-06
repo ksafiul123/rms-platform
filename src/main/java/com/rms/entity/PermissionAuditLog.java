@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * Audit Log - Track permission changes and access
  */
 @Entity
-@Table(name = "permission_audit_logs", indexes = {
+@jakarta.persistence.Table(name = "permission_audit_logs", indexes = {
         @Index(name = "idx_audit_user", columnList = "user_id"),
         @Index(name = "idx_audit_timestamp", columnList = "timestamp"),
         @Index(name = "idx_audit_action", columnList = "action")

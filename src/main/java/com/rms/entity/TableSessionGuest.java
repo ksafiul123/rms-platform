@@ -11,7 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "table_session_guests",
+@jakarta.persistence.Table(name = "table_session_guests",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"session_id", "user_id"})
         },

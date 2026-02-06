@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Permission Override - User-specific permission overrides
  */
 @Entity
-@Table(name = "permission_overrides", indexes = {
+@jakarta.persistence.Table(name = "permission_overrides", indexes = {
         @Index(name = "idx_permission_override_user", columnList = "user_id"),
         @Index(name = "idx_permission_override_restaurant", columnList = "restaurant_id")
 })

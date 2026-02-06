@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * Restaurant Settings - Store-level configurations
  */
 @Entity
-@Table(name = "restaurant_settings", indexes = {
+@jakarta.persistence.Table(name = "restaurant_settings", indexes = {
         @Index(name = "idx_restaurant_settings_restaurant", columnList = "restaurant_id")
 })
 @Data

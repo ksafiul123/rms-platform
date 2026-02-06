@@ -16,7 +16,7 @@ import java.util.Set;
  * Custom Role - Restaurant-specific custom roles
  */
 @Entity
-@Table(name = "custom_roles", indexes = {
+@jakarta.persistence.Table(name = "custom_roles", indexes = {
         @Index(name = "idx_custom_role_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_custom_role_name", columnList = "name, restaurant_id")
 })

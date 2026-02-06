@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tables",
+@jakarta.persistence.Table(name = "tables",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"restaurant_id", "table_number"}),
                 @UniqueConstraint(columnNames = {"qr_code"})

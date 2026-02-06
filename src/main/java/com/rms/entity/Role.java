@@ -18,7 +18,7 @@ import java.util.Set;
  * Enhanced Role Entity with Permission Support
  */
 @Entity
-@Table(name = "roles")
+@jakarta.persistence.Table(name = "roles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

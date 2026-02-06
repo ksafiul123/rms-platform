@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "payment_webhooks", indexes = {
+@jakarta.persistence.Table(name = "payment_webhooks", indexes = {
         @Index(name = "idx_webhook_provider", columnList = "provider"),
         @Index(name = "idx_webhook_received", columnList = "received_at"),
         @Index(name = "idx_webhook_event_id", columnList = "event_id")

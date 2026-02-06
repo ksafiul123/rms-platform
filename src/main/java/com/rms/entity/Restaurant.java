@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Restaurant entity - Tenant master table
  */
 @Entity
-@Table(name = "restaurants", indexes = {
+@jakarta.persistence.Table(name = "restaurants", indexes = {
         @Index(name = "idx_restaurant_code", columnList = "restaurant_code"),
         @Index(name = "idx_restaurant_email", columnList = "email")
 })

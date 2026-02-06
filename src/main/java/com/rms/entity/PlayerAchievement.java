@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "player_achievements", indexes = {
+@jakarta.persistence.Table(name = "player_achievements", indexes = {
         @Index(name = "idx_achievement_user", columnList = "user_id"),
         @Index(name = "idx_achievement_type", columnList = "achievement_type")
 })

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * Permission Entity - Granular access control
  */
 @Entity
-@Table(name = "permissions", indexes = {
+@jakarta.persistence.Table(name = "permissions", indexes = {
         @Index(name = "idx_permission_name", columnList = "name"),
         @Index(name = "idx_permission_resource", columnList = "resource")
 })

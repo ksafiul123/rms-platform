@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Restaurant Onboarding - Track onboarding process
  */
 @Entity
-@Table(name = "restaurant_onboarding", indexes = {
+@jakarta.persistence.Table(name = "restaurant_onboarding", indexes = {
         @Index(name = "idx_onboarding_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_onboarding_salesman", columnList = "salesman_id"),
         @Index(name = "idx_onboarding_status", columnList = "status")

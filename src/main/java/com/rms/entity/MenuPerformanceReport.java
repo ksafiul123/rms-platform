@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "menu_performance_reports", indexes = {
+@jakarta.persistence.Table(name = "menu_performance_reports", indexes = {
         @Index(name = "idx_menu_perf_restaurant_date", columnList = "restaurant_id, report_date"),
         @Index(name = "idx_menu_perf_item", columnList = "menu_item_id, report_date")
 })
