@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "settlement_reconciliations", indexes = {
+@jakarta.persistence.Table(name = "settlement_reconciliations", indexes = {
         @Index(name = "idx_reconciliation_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_reconciliation_period", columnList = "period_start_date, period_end_date")
 })

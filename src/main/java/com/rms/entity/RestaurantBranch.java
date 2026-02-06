@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Restaurant Branch - Multi-location support
  */
 @Entity
-@Table(name = "restaurant_branches", indexes = {
+@jakarta.persistence.Table(name = "restaurant_branches", indexes = {
         @Index(name = "idx_branch_restaurant", columnList = "restaurant_id"),
         @Index(name = "idx_branch_code", columnList = "branch_code")
 })

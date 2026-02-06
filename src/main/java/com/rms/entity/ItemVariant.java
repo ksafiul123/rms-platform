@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * Item Variant - Size variations (Small, Medium, Large)
  */
 @Entity
-@Table(name = "item_variants", indexes = {
+@jakarta.persistence.Table(name = "item_variants", indexes = {
         @Index(name = "idx_variant_item", columnList = "menu_item_id")
 })
 @Data

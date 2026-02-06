@@ -15,7 +15,7 @@ import java.time.LocalTime;
  * Price Schedule - Dynamic pricing based on time/day
  */
 @Entity
-@Table(name = "price_schedules", indexes = {
+@jakarta.persistence.Table(name = "price_schedules", indexes = {
         @Index(name = "idx_price_schedule_item", columnList = "menu_item_id")
 })
 @Data

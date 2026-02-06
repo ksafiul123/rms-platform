@@ -3,8 +3,17 @@ package com.rms.controller;
 //package com.rms.controller;
 
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.rbac.*;
-import dev.safi.restaurant_management_system.dto.rbac.*;
+import com.rms.dto.rbac.AuditLogResponse;
+import com.rms.dto.rbac.CustomRoleRequest;
+import com.rms.dto.rbac.CustomRoleResponse;
+import com.rms.dto.rbac.PermissionCategoryResponse;
+import com.rms.dto.rbac.PermissionCheckRequest;
+import com.rms.dto.rbac.PermissionCheckResponse;
+import com.rms.dto.rbac.PermissionOverrideRequest;
+import com.rms.dto.rbac.PermissionOverrideResponse;
+import com.rms.dto.rbac.RoleHierarchyResponse;
+import com.rms.dto.rbac.RoleResponse;
+import com.rms.dto.rbac.UserPermissionsResponse;
 import com.rms.security.annotation.RequirePermission;
 import com.rms.service.rbac.PermissionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -197,4 +206,3 @@ public class PermissionController {
         );
     }
 }
-

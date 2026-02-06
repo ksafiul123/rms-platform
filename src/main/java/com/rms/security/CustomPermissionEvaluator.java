@@ -1,5 +1,9 @@
 package com.rms.security;
 
+import com.rms.service.rbac.PermissionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
 @Component("permissionEvaluator")
 @RequiredArgsConstructor
 public class CustomPermissionEvaluator {

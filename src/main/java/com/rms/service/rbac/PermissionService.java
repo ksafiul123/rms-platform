@@ -1,19 +1,35 @@
 package com.rms.service.rbac;
 
-//package com.rms.service.rbac;
-
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.rbac.*;
-import com.rms.entity.*;
-import com.rms.repository.*;
-import dev.safi.restaurant_management_system.dto.rbac.*;
-import dev.safi.restaurant_management_system.entity.*;
+import com.rms.dto.rbac.AuditLogResponse;
+import com.rms.dto.rbac.CustomRoleRequest;
+import com.rms.dto.rbac.CustomRoleResponse;
+import com.rms.dto.rbac.PermissionCategoryResponse;
+import com.rms.dto.rbac.PermissionOverrideRequest;
+import com.rms.dto.rbac.PermissionOverrideResponse;
+import com.rms.dto.rbac.PermissionResponse;
+import com.rms.dto.rbac.RoleHierarchyResponse;
+import com.rms.dto.rbac.RoleResponse;
+import com.rms.dto.rbac.UserPermissionsResponse;
+import com.rms.entity.CustomRole;
+import com.rms.entity.Permission;
+import com.rms.entity.PermissionAuditLog;
+import com.rms.entity.PermissionOverride;
+import com.rms.entity.Role;
+import com.rms.entity.User;
+import com.rms.entity.UserCustomRole;
 import com.rms.enums.AuditAction;
 import com.rms.enums.OverrideType;
 import com.rms.enums.RoleName;
 import com.rms.exception.BadRequestException;
 import com.rms.exception.ResourceNotFoundException;
-import dev.safi.restaurant_management_system.repository.*;
+import com.rms.repository.CustomRoleRepository;
+import com.rms.repository.PermissionAuditLogRepository;
+import com.rms.repository.PermissionOverrideRepository;
+import com.rms.repository.PermissionRepository;
+import com.rms.repository.RoleRepository;
+import com.rms.repository.UserCustomRoleRepository;
+import com.rms.repository.UserRepository;
 import com.rms.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +40,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

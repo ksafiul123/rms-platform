@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * Modifier Option - Individual modifier choices
  */
 @Entity
-@Table(name = "modifier_options", indexes = {
+@jakarta.persistence.Table(name = "modifier_options", indexes = {
         @Index(name = "idx_modifier_option_group", columnList = "modifier_group_id")
 })
 @Data

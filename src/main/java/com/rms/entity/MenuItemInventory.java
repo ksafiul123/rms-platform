@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * Defines how much of each inventory item is needed per menu item
  */
 @Entity
-@Table(name = "menu_item_inventory",
+@jakarta.persistence.Table(name = "menu_item_inventory",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"menu_item_id", "inventory_item_id"})
         },

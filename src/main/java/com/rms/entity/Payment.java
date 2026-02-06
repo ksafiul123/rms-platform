@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "payments", indexes = {
+@jakarta.persistence.Table(name = "payments", indexes = {
         @Index(name = "idx_payment_order", columnList = "order_id"),
         @Index(name = "idx_payment_reference", columnList = "payment_reference"),
         @Index(name = "idx_payment_status", columnList = "status"),

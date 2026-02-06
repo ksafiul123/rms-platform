@@ -1,20 +1,38 @@
 package com.rms.service.restaurant;
 
-//package com.rms.service.restaurant;
-
 import com.rms.dto.auth.ApiResponse;
-import com.rms.dto.restaurant.*;
-import com.rms.entity.*;
-import com.rms.repository.*;
-import dev.safi.restaurant_management_system.dto.restaurant.*;
-import dev.safi.restaurant_management_system.entity.*;
+import com.rms.dto.restaurant.BranchCreateRequest;
+import com.rms.dto.restaurant.BranchResponse;
+import com.rms.dto.restaurant.BulkFeatureToggleRequest;
+import com.rms.dto.restaurant.FeatureStatusResponse;
+import com.rms.dto.restaurant.FeatureToggleRequest;
+import com.rms.dto.restaurant.OnboardingStatusResponse;
+import com.rms.dto.restaurant.RestaurantDetailsResponse;
+import com.rms.dto.restaurant.RestaurantListResponse;
+import com.rms.dto.restaurant.RestaurantSettingsRequest;
+import com.rms.dto.restaurant.RestaurantSettingsResponse;
+import com.rms.dto.restaurant.SubscriptionPlanResponse;
+import com.rms.dto.restaurant.SubscriptionResponse;
+import com.rms.entity.Restaurant;
+import com.rms.entity.RestaurantBranch;
+import com.rms.entity.RestaurantFeature;
+import com.rms.entity.RestaurantSettings;
+import com.rms.entity.RestaurantSubscription;
+import com.rms.entity.SubscriptionPlan;
+import com.rms.entity.User;
 import com.rms.enums.BusinessType;
 import com.rms.enums.FeatureName;
 import com.rms.enums.SubscriptionStatus;
 import com.rms.exception.BadRequestException;
+import com.rms.exception.InsufficientPermissionException;
 import com.rms.exception.ResourceNotFoundException;
-import dev.safi.restaurant_management_system.exception.InsufficientPermissionException;
-import dev.safi.restaurant_management_system.repository.*;
+import com.rms.repository.RestaurantBranchRepository;
+import com.rms.repository.RestaurantFeatureRepository;
+import com.rms.repository.RestaurantRepository;
+import com.rms.repository.RestaurantSettingsRepository;
+import com.rms.repository.RestaurantSubscriptionRepository;
+import com.rms.repository.SubscriptionPlanRepository;
+import com.rms.repository.UserRepository;
 import com.rms.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +42,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

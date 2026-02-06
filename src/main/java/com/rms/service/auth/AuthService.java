@@ -1,11 +1,20 @@
 package com.rms.service.auth;
 
-import com.rms.dto.auth.*;
-import dev.safi.restaurant_management_system.dto.auth.*;
+import com.rms.dto.auth.ApiResponse;
+import com.rms.dto.auth.AuthResponse;
+import com.rms.dto.auth.LoginRequest;
+import com.rms.dto.auth.RegisterRequest;
+import com.rms.dto.auth.RestaurantInfo;
+import com.rms.dto.auth.RestaurantRegisterRequest;
+import com.rms.dto.auth.TokenRefreshRequest;
+import com.rms.dto.auth.TokenRefreshResponse;
+import com.rms.dto.auth.UserInfo;
 import com.rms.entity.RefreshToken;
 import com.rms.entity.Restaurant;
 import com.rms.entity.Role;
 import com.rms.entity.User;
+import com.rms.enums.RoleName;
+import com.rms.enums.SubscriptionStatus;
 import com.rms.exception.BadRequestException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.exception.TokenRefreshException;
@@ -109,7 +118,7 @@ public class AuthService {
                 .build();
 
         // Assign CUSTOMER role by default
-        Role customerRole = roleRepository.findByName("ROLE_CUSTOMER")
+        Role customerRole = roleRepository.findByName(RoleName.ROLE_CUSTOMER)
                 .orElseThrow(() -> new RuntimeException("Customer role not found"));
         user.setRoles(Set.of(customerRole));
 
@@ -177,7 +186,7 @@ public class AuthService {
                 .isPhoneVerified(false)
                 .build();
 
-        Role adminRole = roleRepository.findByName("ROLE_RESTAURANT_ADMIN")
+        Role adminRole = roleRepository.findByName(RoleName.ROLE_RESTAURANT_ADMIN)
                 .orElseThrow(() -> new RuntimeException("Admin role not found"));
         admin.setRoles(Set.of(adminRole));
 
@@ -303,4 +312,3 @@ public class AuthService {
                 .build();
     }
 }
-

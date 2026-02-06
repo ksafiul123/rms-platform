@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "notification_templates", indexes = {
+@jakarta.persistence.Table(name = "notification_templates", indexes = {
         @Index(name = "idx_template_code", columnList = "code"),
         @Index(name = "idx_template_channel", columnList = "channel")
 })

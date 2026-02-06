@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 // ============================================
 
 @Entity
-@Table(name = "analytics_snapshots", indexes = {
+@jakarta.persistence.Table(name = "analytics_snapshots", indexes = {
         @Index(name = "idx_snapshot_restaurant_date", columnList = "restaurant_id, snapshot_date, report_type"),
         @Index(name = "idx_snapshot_date", columnList = "snapshot_date")
 })
