@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(isolation = Isolation.SERIALIZABLE, timeout = 10)
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -511,5 +512,7 @@ public class OrderService {
                     session.getId(), session.getTotalAmount());
         }
     }
+
+
 }
-}
+
