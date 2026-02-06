@@ -279,6 +279,12 @@ public class InventoryService {
         return response;
     }
 
+    @Transactional(readOnly = true)
+    public boolean checkAndReserve(Long menuItemId, int quantity) {
+        StockAvailabilityResponse availability = checkMenuItemAvailability(menuItemId, quantity);
+        return availability.getIsAvailable();
+    }
+
     @Transactional
     public MenuItemInventoryResponse linkInventoryToMenuItem(Long itemId,
                                                              LinkMenuItemRequest request,
