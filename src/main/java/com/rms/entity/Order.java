@@ -123,9 +123,6 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Payment> payments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KitchenOrderItem> kitchenItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -175,12 +172,5 @@ public class Order {
 
     public Payment getPayment() {
         return payments.isEmpty() ? null : payments.get(0);
-    }
-
-    public String getCustomerPhone() {
-        if (getPayment() != null && getPayment().getCustomerPhone() != null) {
-            return getPayment().getCustomerPhone();
-        }
-        return customer != null ? customer.getPhoneNumber() : null;
     }
 }

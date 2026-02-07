@@ -3,6 +3,9 @@ package com.rms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
 @jakarta.persistence.Table(name = "discount_rewards", indexes = {
         @Index(name = "idx_discount_user", columnList = "user_id"),

@@ -160,7 +160,7 @@ public class KitchenOrderService {
         return mapToKitchenOrderItemResponse(kitchenItem);
     }
 
-    public OrderResponse markOrderReady(Long orderId, Long userId, MarkReadyRequest request) {
+    public OrderDTO.OrderResponse markOrderReady(Long orderId, Long userId, MarkReadyRequest request) {
 
         log.info("Marking order as ready: orderId={}", orderId);
 
