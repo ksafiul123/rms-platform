@@ -81,8 +81,4 @@ public class OrderStatusHistory extends BaseEntity {
         user.setId(userId);
         this.updatedBy = user;
     }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 }

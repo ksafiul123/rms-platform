@@ -876,4 +876,16 @@ public class AnalyticsService {
     private Long safe(Long value) {
         return value != null ? value : 0L;
     }
+
+    private BigDecimal safe(BigDecimal value) {
+        return value != null ? value : BigDecimal.ZERO;
+    }
+
+    private Integer safe(Integer value) {
+        return value != null ? value : 0;
+    }
+
+    private Long safe(Long value) {
+        return value != null ? value : 0L;
+    }
 }

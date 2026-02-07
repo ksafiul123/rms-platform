@@ -33,9 +33,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCustomerIdAndRestaurantId(Long customerId, Long restaurantId, Pageable pageable);
 
-    List<Order> findByRestaurantIdAndStatusAndOrderType(
-            Long restaurantId, Order.OrderStatus status, Order.OrderType orderType);
-
     List<Order> findByRestaurantIdAndStatusInOrderByPriorityDescCreatedAtAsc(
             Long restaurantId, List<Order.OrderStatus> statuses);
 
@@ -67,10 +64,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
-
-    @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
-            "AND o.status IN ('CONFIRMED', 'PREPARING', 'READY')")
-    List<Order> findActiveOrdersForDisplay(@Param("restaurantId") Long restaurantId);
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.restaurantId = :restaurantId " +
             "AND o.status = :status")
