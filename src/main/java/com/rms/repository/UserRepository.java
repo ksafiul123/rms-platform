@@ -37,11 +37,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("roleName") String roleName
     );
 
+    @Query("SELECT COUNT(u) FROM User u WHERE u.restaurantId = :restaurantId AND u.isActive = true")
+    long countCustomersByRestaurantId(@Param("restaurantId") Long restaurantId);
+
     @Modifying
     @Query("UPDATE User u SET u.lastLogin = :loginTime WHERE u.id = :userId")
     void updateLastLogin(@Param("userId") Long userId, @Param("loginTime") LocalDateTime loginTime);
 }
-
 
 
 

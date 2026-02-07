@@ -16,6 +16,8 @@ import java.util.Optional;
 @Repository
 public interface SalesReportRepository extends JpaRepository<SalesReport, Long> {
 
+    Optional<SalesReport> findByRestaurantIdAndReportDate(Long restaurantId, LocalDate reportDate);
+
     Optional<SalesReport> findByRestaurantIdAndReportDateAndPeriodType(
             Long restaurantId,
             LocalDate reportDate,
