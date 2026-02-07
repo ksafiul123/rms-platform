@@ -55,5 +55,30 @@ public class OrderStatusHistory extends BaseEntity {
             timestamp = LocalDateTime.now();
         }
     }
-}
 
+    public Order.OrderStatus getFromStatus() {
+        return previousStatus;
+    }
+
+    public void setFromStatus(Order.OrderStatus status) {
+        this.previousStatus = status;
+    }
+
+    public Order.OrderStatus getToStatus() {
+        return status;
+    }
+
+    public void setToStatus(Order.OrderStatus status) {
+        this.status = status;
+    }
+
+    public void setChangedBy(Long userId) {
+        if (userId == null) {
+            this.updatedBy = null;
+            return;
+        }
+        User user = new User();
+        user.setId(userId);
+        this.updatedBy = user;
+    }
+}

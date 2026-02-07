@@ -43,12 +43,6 @@ public class PaymentService {
         Payment payment = createPayment(order, transactionId, request);
         paymentRepository.save(payment);
 
-        // Update order status
-        String transactionId = paymentProvider.charge(request);
-
-        Payment payment = createPayment(order, transactionId, request);
-        paymentRepository.save(payment);
-
         order.setPaymentStatus(Order.PaymentStatus.PAID);
         orderRepository.save(order);
 

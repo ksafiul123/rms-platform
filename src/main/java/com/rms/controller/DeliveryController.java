@@ -46,7 +46,7 @@ public class DeliveryController {
                 deliveryService.assignDeliveryPartner(
                         orderId, request.getDeliveryPartnerId(), assignedBy);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "Delivery partner assigned"));
+        return ResponseEntity.ok(ApiResponse.success("Delivery partner assigned", response));
     }
 
     @PostMapping("/assignments/{assignmentId}/accept")
@@ -60,7 +60,7 @@ public class DeliveryController {
         DeliveryAssignmentResponse response =
                 deliveryService.acceptDelivery(assignmentId, deliveryPartnerId);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "Delivery accepted"));
+        return ResponseEntity.ok(ApiResponse.success("Delivery accepted", response));
     }
 
     @PostMapping("/assignments/{assignmentId}/pickup")
@@ -75,7 +75,7 @@ public class DeliveryController {
         DeliveryAssignmentResponse response =
                 deliveryService.markPickedUp(assignmentId, deliveryPartnerId, location);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "Order picked up"));
+        return ResponseEntity.ok(ApiResponse.success("Order picked up", response));
     }
 
     @PatchMapping("/assignments/{assignmentId}/location")
@@ -89,7 +89,7 @@ public class DeliveryController {
         Long deliveryPartnerId = SecurityUtil.getCurrentUserId();
         deliveryService.updateLocation(assignmentId, deliveryPartnerId, location);
 
-        return ResponseEntity.ok(ApiResponse.success(null, "Location updated"));
+        return ResponseEntity.ok(ApiResponse.success("Location updated", null));
     }
 
     @PostMapping("/assignments/{assignmentId}/deliver")
@@ -104,7 +104,7 @@ public class DeliveryController {
         DeliveryAssignmentResponse response =
                 deliveryService.markDelivered(assignmentId, deliveryPartnerId, request);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "Order delivered successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Order delivered successfully", response));
     }
 
     @GetMapping("/my-active")

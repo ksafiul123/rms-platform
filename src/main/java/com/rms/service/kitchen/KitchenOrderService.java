@@ -41,14 +41,33 @@ public class KitchenOrderService {
 
         log.info("Fetching active kitchen orders for restaurant: {}", restaurantId);
 
-        List<Order.OrderStatus> activeStatuses = Arrays.asList(
-                Order.OrderStatus.CONFIRMED,
-                Order.OrderStatus.PREPARING
-        );
+        List<Order.OrderStatus> activeStatuses;
+        if (statusFilter != null && !statusFilter.isBlank()) {
+            try {
+                activeStatuses = List.of(Order.OrderStatus.valueOf(statusFilter.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Invalid status filter: " + statusFilter);
+            }
+        } else {
+            activeStatuses = Arrays.asList(
+                    Order.OrderStatus.CONFIRMED,
+                    Order.OrderStatus.PREPARING
+            );
+        }
 
         List<Order> orders = orderRepository
                 .findByRestaurantIdAndStatusInOrderByPriorityDescCreatedAtAsc(
                         restaurantId, activeStatuses);
+
+        if (stationFilter != null && !stationFilter.isBlank()) {
+            Set<Long> stationOrderIds = kitchenOrderItemRepository.findByStation(stationFilter)
+                    .stream()
+                    .map(item -> item.getOrder().getId())
+                    .collect(Collectors.toSet());
+            orders = orders.stream()
+                    .filter(order -> stationOrderIds.contains(order.getId()))
+                    .collect(Collectors.toList());
+        }
 
         return orders.stream()
                 .map(this::mapToKitchenOrderResponse)
@@ -211,9 +230,7 @@ public class KitchenOrderService {
                 .filter(OrderPreparationMetrics::getWasOnTime)
                 .count();
 
-        double onTimePercentage = totalOrders > 0
-                ? (ordersOnTime * 100.0) / totalOrders
-                : 0.0;
+        double onTimePercentage = (ordersOnTime * 100.0) / totalOrders;
 
         return KitchenMetricsResponse.builder()
                 .date(date)
@@ -389,7 +406,28 @@ public class KitchenOrderService {
     }
 
     private OrderDTO.OrderResponse mapToOrderResponse(Order order) {
-        // Implement order response mapping
-        return new OrderDTO.OrderResponse();
+        OrderDTO.OrderResponse response = new OrderDTO.OrderResponse();
+        response.setId(order.getId());
+        response.setRestaurantId(order.getRestaurantId());
+        response.setCustomerId(order.getCustomerId());
+        response.setCustomerName(order.getCustomer() != null ? order.getCustomer().getFullName() : null);
+        response.setOrderNumber(order.getOrderNumber());
+        response.setOrderType(order.getOrderType());
+        response.setStatus(order.getStatus());
+        response.setTableNumber(order.getTableNumber());
+        response.setDeliveryAddress(order.getDeliveryAddress());
+        response.setDeliveryManId(order.getDeliveryManId());
+        response.setSubtotal(order.getSubtotal());
+        response.setTaxAmount(order.getTaxAmount());
+        response.setDeliveryFee(order.getDeliveryFee());
+        response.setDiscountAmount(order.getDiscountAmount());
+        response.setTotalAmount(order.getTotalAmount());
+        response.setSpecialInstructions(order.getSpecialInstructions());
+        response.setEstimatedReadyTime(order.getEstimatedReadyTime());
+        response.setActualReadyTime(order.getActualReadyTime());
+        response.setDeliveryTime(order.getDeliveryTime());
+        response.setCreatedAt(order.getCreatedAt());
+        response.setUpdatedAt(order.getUpdatedAt());
+        return response;
     }
 }

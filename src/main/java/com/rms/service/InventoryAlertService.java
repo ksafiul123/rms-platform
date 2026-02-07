@@ -4,6 +4,7 @@ package com.rms.service;
 
 import com.rms.dto.InventoryDTO.LowStockAlertResponse;
 import com.rms.entity.LowStockAlert;
+import com.rms.exception.BadRequestException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.LowStockAlertRepository;
 import com.rms.security.UserPrincipal;

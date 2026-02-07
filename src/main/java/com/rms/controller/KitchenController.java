@@ -43,8 +43,8 @@ public class KitchenController {
             @CurrentUser UserPrincipal currentUser) {
 
         // Get orders that need kitchen attention (CONFIRMED, PREPARING)
-        Page<OrderResponse> orders = orderService.getOrders(
-                currentUser, null, null, pageable);
+        Page<OrderResponse> orders = orderService.getKitchenOrdersPage(
+                currentUser, pageable);
 
         return ResponseEntity.ok(
                 ApiResponse.success("Active kitchen orders retrieved successfully", orders));

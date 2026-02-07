@@ -31,18 +31,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.restaurantId = :restaurantId AND u.isActive = true")
     java.util.List<User> findAllByRestaurantId(@Param("restaurantId") Long restaurantId);
 
+    @Query("SELECT u FROM User u WHERE u.restaurantId = :restaurantId AND u.isActive = true")
+    java.util.List<User> findCustomersByRestaurantId(@Param("restaurantId") Long restaurantId);
+
     @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName AND u.restaurantId = :restaurantId")
     java.util.List<User> findByRestaurantIdAndRole(
             @Param("restaurantId") Long restaurantId,
             @Param("roleName") String roleName
     );
 
+    @Query("SELECT COUNT(u) FROM User u WHERE u.restaurantId = :restaurantId AND u.isActive = true")
+    long countCustomersByRestaurantId(@Param("restaurantId") Long restaurantId);
+
     @Modifying
     @Query("UPDATE User u SET u.lastLogin = :loginTime WHERE u.id = :userId")
     void updateLastLogin(@Param("userId") Long userId, @Param("loginTime") LocalDateTime loginTime);
 }
-
-
 
 
 

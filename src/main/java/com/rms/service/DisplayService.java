@@ -1,9 +1,13 @@
 package com.rms.service;
 
+import com.rms.dto.DisplayConfigResponse;
 import com.rms.dto.DisplayDataResponse;
+import com.rms.dto.DisplayStatsResponse;
+import com.rms.dto.OrderDisplayDetail;
 import com.rms.entity.DisplayConfiguration;
 import com.rms.entity.KitchenOrderItem;
 import com.rms.entity.Order;
+import com.rms.entity.OrderItem;
 import com.rms.entity.OrderDisplaySnapshot;
 import com.rms.exception.BadRequestException;
 import com.rms.exception.ResourceNotFoundException;
@@ -28,7 +32,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.rms.entity.DeliveryAssignment.DeliveryStatus.DELIVERED;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +74,7 @@ public class DisplayService {
                 .theme(config.getTheme())
                 .currentTime(LocalDateTime.now())
                 .serverTimestamp(System.currentTimeMillis())
-                .readyOrders(mapToDisplayData(grouped.get(DisplayStatus.READY), config))
+                .readyOrders(mapToDisplayData(grouped.get(OrderDisplaySnapshot.DisplayStatus.READY), config))
                 .preparingOrders(mapToDisplayData(grouped.get(OrderDisplaySnapshot.DisplayStatus.PREPARING), config))
                 .completedOrders(mapToDisplayData(grouped.get(OrderDisplaySnapshot.DisplayStatus.COLLECTED), config))
                 .stats(calculateStats(snapshots))
@@ -79,6 +82,125 @@ public class DisplayService {
                 .build();
 
         return response;
+    }
+
+    public DisplayConfigResponse getDisplayConfig(String displayToken) {
+        DisplayConfiguration config = displayConfigRepository
+                .findByDisplayToken(displayToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Display not found"));
+
+        DisplayConfigResponse.StyleConfig styleConfig = DisplayConfigResponse.StyleConfig.builder()
+                .primaryColor(config.getPrimaryColor())
+                .secondaryColor(config.getSecondaryColor())
+                .readyColor(config.getReadyColor())
+                .preparingColor(config.getPreparingColor())
+                .fontFamily(config.getFontFamily())
+                .logoUrl(config.getLogoUrl())
+                .backgroundImageUrl(config.getBackgroundImageUrl())
+                .build();
+
+        DisplayConfigResponse.TextConfig textConfig = DisplayConfigResponse.TextConfig.builder()
+                .headerText(config.getHeaderText())
+                .footerText(config.getFooterText())
+                .language(config.getLanguage())
+                .translations(Map.of())
+                .build();
+
+        return DisplayConfigResponse.builder()
+                .restaurantId(config.getRestaurant().getId())
+                .restaurantName(config.getRestaurant().getName())
+                .displayMode(config.getDisplayMode())
+                .theme(config.getTheme())
+                .refreshIntervalSeconds(config.getRefreshIntervalSeconds())
+                .showPreparing(config.getShowPreparing())
+                .showReady(config.getShowReady())
+                .showCompleted(config.getShowCompleted())
+                .maxOrdersDisplay(config.getMaxOrdersDisplay())
+                .showOrderItems(config.getShowOrderItems())
+                .showEstimatedTime(config.getShowEstimatedTime())
+                .showElapsedTime(config.getShowElapsedTime())
+                .style(styleConfig)
+                .text(textConfig)
+                .build();
+    }
+
+    public DisplayStatsResponse getDisplayStats(String displayToken) {
+        DisplayConfiguration config = displayConfigRepository
+                .findByDisplayToken(displayToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Display not found"));
+
+        List<OrderDisplaySnapshot> snapshots = snapshotRepository
+                .findActiveByRestaurantId(config.getRestaurant().getId());
+
+        long readyCount = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.READY)
+                .count();
+        long preparingCount = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.PREPARING)
+                .count();
+        long completedCount = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.COLLECTED)
+                .count();
+
+        List<Integer> elapsedTimes = snapshots.stream()
+                .map(OrderDisplaySnapshot::getElapsedMinutes)
+                .filter(value -> value != null && value >= 0)
+                .toList();
+
+        Integer avgPreparationTime = elapsedTimes.isEmpty()
+                ? null
+                : (int) Math.round(elapsedTimes.stream()
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0));
+
+        Integer peakWaitTime = elapsedTimes.isEmpty()
+                ? null
+                : elapsedTimes.stream()
+                .max(Integer::compareTo)
+                .orElse(null);
+
+        return DisplayStatsResponse.builder()
+                .totalOrders(snapshots.size())
+                .readyCount((int) readyCount)
+                .preparingCount((int) preparingCount)
+                .completedCount((int) completedCount)
+                .avgPreparationTime(avgPreparationTime)
+                .peakWaitTime(peakWaitTime)
+                .build();
+    }
+
+    public OrderDisplayDetail getOrderDetail(String displayToken, String orderNumber) {
+        DisplayConfiguration config = displayConfigRepository
+                .findByDisplayToken(displayToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Display not found"));
+
+        Order order = orderRepository
+                .findByOrderNumberAndRestaurantId(orderNumber, config.getRestaurant().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        List<OrderDisplayDetail.OrderItemDetail> items = order.getOrderItems().stream()
+                .map(item -> OrderDisplayDetail.OrderItemDetail.builder()
+                        .itemName(item.getItemName())
+                        .quantity(item.getQuantity())
+                        .specialInstructions(item.getSpecialInstructions())
+                        .build())
+                .toList();
+
+        return OrderDisplayDetail.builder()
+                .orderNumber(order.getOrderNumber())
+                .displayNumber(extractDisplayNumber(order.getOrderNumber()))
+                .tableNumber(order.getTableNumber())
+                .orderType(order.getOrderType().name())
+                .status(order.getStatus().name())
+                .customerName(null)
+                .totalItems(order.getOrderItems().size())
+                .estimatedReadyTime(order.getEstimatedReadyTime())
+                .actualReadyTime(order.getActualReadyTime())
+                .elapsedMinutes(calculateElapsedMinutes(order))
+                .remainingMinutes(calculateRemainingMinutes(order))
+                .items(items)
+                .build();
     }
 
     @Scheduled(fixedDelay = 5000) // Every 5 seconds
@@ -146,6 +268,81 @@ public class DisplayService {
 
         // Clear cache for this restaurant
         evictDisplayCache(restaurantId);
+    }
+
+    private List<DisplayDataResponse.OrderDisplayData> mapToDisplayData(
+            List<OrderDisplaySnapshot> snapshots, DisplayConfiguration config) {
+        if (snapshots == null) {
+            return List.of();
+        }
+
+        return snapshots.stream()
+                .limit(config.getMaxOrdersDisplay() != null ? config.getMaxOrdersDisplay() : snapshots.size())
+                .map(snapshot -> DisplayDataResponse.OrderDisplayData.builder()
+                        .orderNumber(snapshot.getOrderNumber())
+                        .displayNumber(snapshot.getDisplayNumber())
+                        .tableNumber(snapshot.getTableNumber())
+                        .orderType(snapshot.getOrderType() != null ? snapshot.getOrderType().name() : null)
+                        .status(snapshot.getDisplayStatus().name())
+                        .priority(snapshot.getPriority())
+                        .isHighlighted(snapshot.getIsHighlighted())
+                        .customerName(snapshot.getCustomerName())
+                        .totalItems(snapshot.getTotalItems())
+                        .itemsCompleted(snapshot.getItemsCompleted())
+                        .estimatedReadyTime(snapshot.getEstimatedReadyTime())
+                        .actualReadyTime(snapshot.getActualReadyTime())
+                        .elapsedMinutes(snapshot.getElapsedMinutes())
+                        .remainingMinutes(snapshot.getRemainingMinutes())
+                        .items(List.of())
+                        .build())
+                .toList();
+    }
+
+    private DisplayDataResponse.DisplayStats calculateStats(List<OrderDisplaySnapshot> snapshots) {
+        if (snapshots == null) {
+            return DisplayDataResponse.DisplayStats.builder().build();
+        }
+
+        long ready = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.READY)
+                .count();
+        long preparing = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.PREPARING)
+                .count();
+        long completed = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.COLLECTED)
+                .count();
+
+        return DisplayDataResponse.DisplayStats.builder()
+                .totalOrders(snapshots.size())
+                .readyCount((int) ready)
+                .preparingCount((int) preparing)
+                .completedCount((int) completed)
+                .build();
+    }
+
+    private DisplayDataResponse.StyleConfig buildStyleConfig(DisplayConfiguration config) {
+        return DisplayDataResponse.StyleConfig.builder()
+                .primaryColor(config.getPrimaryColor())
+                .secondaryColor(config.getSecondaryColor())
+                .readyColor(config.getReadyColor())
+                .preparingColor(config.getPreparingColor())
+                .fontFamily(config.getFontFamily())
+                .logoUrl(config.getLogoUrl())
+                .backgroundImageUrl(config.getBackgroundImageUrl())
+                .playSoundOnReady(config.getPlaySoundOnReady())
+                .soundNotificationUrl(config.getSoundNotificationUrl())
+                .build();
+    }
+
+    private String serializeOrderItems(List<OrderItem> items) {
+        return "[]";
+    }
+
+    private void evictDisplayCache(Long restaurantId) {
+        if (cacheManager.getCache("displayData") != null) {
+            cacheManager.getCache("displayData").clear();
+        }
     }
 
     private OrderDisplaySnapshot.DisplayStatus mapOrderStatusToDisplayStatus(Order.OrderStatus orderStatus) {
