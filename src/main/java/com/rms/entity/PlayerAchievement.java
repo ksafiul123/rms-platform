@@ -3,6 +3,8 @@ package com.rms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @jakarta.persistence.Table(name = "player_achievements", indexes = {
         @Index(name = "idx_achievement_user", columnList = "user_id"),
