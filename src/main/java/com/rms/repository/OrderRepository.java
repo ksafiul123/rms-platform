@@ -31,6 +31,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCustomerIdAndRestaurantId(Long customerId, Long restaurantId, Pageable pageable);
 
+    List<Order> findByRestaurantIdAndStatusInOrderByPriorityDescCreatedAtAsc(
+            Long restaurantId, List<Order.OrderStatus> statuses);
+
     Page<Order> findByDeliveryManId(Long deliveryManId, Pageable pageable);
 
     @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
@@ -57,4 +60,3 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     boolean existsByOrderNumber(String orderNumber);
 }
-
