@@ -35,6 +35,10 @@ public class Order {
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", insertable = false, updatable = false)
+    private User customer;
+
     @Column(name = "order_number", nullable = false, unique = true, length = 20)
     private String orderNumber;
 
@@ -81,6 +85,18 @@ public class Order {
     @Column(name = "special_instructions", columnDefinition = "TEXT")
     private String specialInstructions;
 
+    @Column(name = "kitchen_notes", columnDefinition = "TEXT")
+    private String kitchenNotes;
+
+    @Column(name = "estimated_preparation_time_minutes")
+    private Integer estimatedPreparationTimeMinutes;
+
+    @Column(name = "priority", nullable = false)
+    private Integer priority = 0;
+
+    @Column(name = "is_rush_order", nullable = false)
+    private Boolean isRushOrder = false;
+
     @Column(name = "estimated_ready_time")
     private LocalDateTime estimatedReadyTime;
 
@@ -101,6 +117,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<KitchenOrderItem> kitchenItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderStatusHistory> statusHistory = new ArrayList<>();

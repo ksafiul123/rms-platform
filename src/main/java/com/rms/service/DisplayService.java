@@ -1,6 +1,9 @@
 package com.rms.service;
 
+import com.rms.dto.DisplayConfigResponse;
 import com.rms.dto.DisplayDataResponse;
+import com.rms.dto.DisplayStatsResponse;
+import com.rms.dto.OrderDisplayDetail;
 import com.rms.entity.DisplayConfiguration;
 import com.rms.entity.KitchenOrderItem;
 import com.rms.entity.Order;
@@ -28,7 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.rms.entity.DeliveryAssignment.DeliveryStatus.DELIVERED;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +81,125 @@ public class DisplayService {
                 .build();
 
         return response;
+    }
+
+    public DisplayConfigResponse getDisplayConfig(String displayToken) {
+        DisplayConfiguration config = displayConfigRepository
+                .findByDisplayToken(displayToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Display not found"));
+
+        DisplayConfigResponse.StyleConfig styleConfig = DisplayConfigResponse.StyleConfig.builder()
+                .primaryColor(config.getPrimaryColor())
+                .secondaryColor(config.getSecondaryColor())
+                .readyColor(config.getReadyColor())
+                .preparingColor(config.getPreparingColor())
+                .fontFamily(config.getFontFamily())
+                .logoUrl(config.getLogoUrl())
+                .backgroundImageUrl(config.getBackgroundImageUrl())
+                .build();
+
+        DisplayConfigResponse.TextConfig textConfig = DisplayConfigResponse.TextConfig.builder()
+                .headerText(config.getHeaderText())
+                .footerText(config.getFooterText())
+                .language(config.getLanguage())
+                .translations(Map.of())
+                .build();
+
+        return DisplayConfigResponse.builder()
+                .restaurantId(config.getRestaurant().getId())
+                .restaurantName(config.getRestaurant().getName())
+                .displayMode(config.getDisplayMode())
+                .theme(config.getTheme())
+                .refreshIntervalSeconds(config.getRefreshIntervalSeconds())
+                .showPreparing(config.getShowPreparing())
+                .showReady(config.getShowReady())
+                .showCompleted(config.getShowCompleted())
+                .maxOrdersDisplay(config.getMaxOrdersDisplay())
+                .showOrderItems(config.getShowOrderItems())
+                .showEstimatedTime(config.getShowEstimatedTime())
+                .showElapsedTime(config.getShowElapsedTime())
+                .style(styleConfig)
+                .text(textConfig)
+                .build();
+    }
+
+    public DisplayStatsResponse getDisplayStats(String displayToken) {
+        DisplayConfiguration config = displayConfigRepository
+                .findByDisplayToken(displayToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Display not found"));
+
+        List<OrderDisplaySnapshot> snapshots = snapshotRepository
+                .findActiveByRestaurantId(config.getRestaurant().getId());
+
+        long readyCount = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.READY)
+                .count();
+        long preparingCount = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.PREPARING)
+                .count();
+        long completedCount = snapshots.stream()
+                .filter(snapshot -> snapshot.getDisplayStatus() == OrderDisplaySnapshot.DisplayStatus.COLLECTED)
+                .count();
+
+        List<Integer> elapsedTimes = snapshots.stream()
+                .map(OrderDisplaySnapshot::getElapsedMinutes)
+                .filter(value -> value != null && value >= 0)
+                .toList();
+
+        Integer avgPreparationTime = elapsedTimes.isEmpty()
+                ? null
+                : (int) Math.round(elapsedTimes.stream()
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0));
+
+        Integer peakWaitTime = elapsedTimes.isEmpty()
+                ? null
+                : elapsedTimes.stream()
+                .max(Integer::compareTo)
+                .orElse(null);
+
+        return DisplayStatsResponse.builder()
+                .totalOrders(snapshots.size())
+                .readyCount((int) readyCount)
+                .preparingCount((int) preparingCount)
+                .completedCount((int) completedCount)
+                .avgPreparationTime(avgPreparationTime)
+                .peakWaitTime(peakWaitTime)
+                .build();
+    }
+
+    public OrderDisplayDetail getOrderDetail(String displayToken, String orderNumber) {
+        DisplayConfiguration config = displayConfigRepository
+                .findByDisplayToken(displayToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Display not found"));
+
+        Order order = orderRepository
+                .findByOrderNumberAndRestaurantId(orderNumber, config.getRestaurant().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        List<OrderDisplayDetail.OrderItemDetail> items = order.getOrderItems().stream()
+                .map(item -> OrderDisplayDetail.OrderItemDetail.builder()
+                        .itemName(item.getItemName())
+                        .quantity(item.getQuantity())
+                        .specialInstructions(item.getSpecialInstructions())
+                        .build())
+                .toList();
+
+        return OrderDisplayDetail.builder()
+                .orderNumber(order.getOrderNumber())
+                .displayNumber(extractDisplayNumber(order.getOrderNumber()))
+                .tableNumber(order.getTableNumber())
+                .orderType(order.getOrderType().name())
+                .status(order.getStatus().name())
+                .customerName(null)
+                .totalItems(order.getOrderItems().size())
+                .estimatedReadyTime(order.getEstimatedReadyTime())
+                .actualReadyTime(order.getActualReadyTime())
+                .elapsedMinutes(calculateElapsedMinutes(order))
+                .remainingMinutes(calculateRemainingMinutes(order))
+                .items(items)
+                .build();
     }
 
     @Scheduled(fixedDelay = 5000) // Every 5 seconds

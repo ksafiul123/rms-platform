@@ -2,6 +2,8 @@ package com.rms.controller;
 
 import com.rms.dto.DisplayConfigResponse;
 import com.rms.dto.DisplayDataResponse;
+import com.rms.dto.DisplayStatsResponse;
+import com.rms.dto.OrderDisplayDetail;
 import com.rms.service.DisplayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -61,7 +63,7 @@ public class PublicDisplayController {
     }
 
     /**
-     * Get order details for announcement
+     * Get order details for an announcement
      */
     @GetMapping("/{displayToken}/orders/{orderNumber}")
     public ResponseEntity<OrderDisplayDetail> getOrderDetail(
