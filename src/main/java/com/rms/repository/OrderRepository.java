@@ -36,6 +36,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByDeliveryManId(Long deliveryManId, Pageable pageable);
 
+    List<Order> findByRestaurantIdAndCreatedAtBetween(
+            Long restaurantId, LocalDateTime startDate, LocalDateTime endDate);
+
     @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
             "AND o.createdAt BETWEEN :startDate AND :endDate")
     List<Order> findByRestaurantIdAndDateRange(
@@ -49,6 +52,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByRestaurantIdAndStatusIn(
             @Param("restaurantId") Long restaurantId,
             @Param("statuses") List<Order.OrderStatus> statuses
+    );
+
+    @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
+            "AND o.status IN ('COMPLETED', 'DELIVERED') " +
+            "AND o.createdAt BETWEEN :startDate AND :endDate")
+    List<Order> findCompletedByRestaurantIdAndDateRange(
+            @Param("restaurantId") Long restaurantId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
     );
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.restaurantId = :restaurantId " +

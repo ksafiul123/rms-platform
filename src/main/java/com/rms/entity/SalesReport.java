@@ -38,6 +38,14 @@ public class SalesReport extends BaseEntity {
     @Builder.Default
     private BigDecimal totalRevenue = BigDecimal.ZERO;
 
+    @Column(name = "total_cost", precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal totalCost = BigDecimal.ZERO;
+
+    @Column(name = "net_profit", precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal netProfit = BigDecimal.ZERO;
+
     @Column(name = "total_discounts", precision = 12, scale = 2)
     @Builder.Default
     private BigDecimal totalDiscounts = BigDecimal.ZERO;
@@ -105,6 +113,10 @@ public class SalesReport extends BaseEntity {
     @Column(name = "cancelled_orders", nullable = false)
     @Builder.Default
     private Integer cancelledOrders = 0;
+
+    @Column(name = "refunded_amount", precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal refundedAmount = BigDecimal.ZERO;
 
     // Payment Methods
     @Column(name = "cash_payments", precision = 12, scale = 2)

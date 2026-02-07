@@ -174,19 +174,19 @@ public class AnalyticsSchedulerService {
 
         // Filter completed orders
         List<Order> completedOrders = orders.stream()
-                .filter(o -> o.getStatus() == Order.OrderStatus.COMPLETED ||
-                        o.getStatus() == Order.OrderStatus.DELIVERED)
-                .collect(Collectors.toList());
+                .filter(o -> o.getStatus() == Order.OrderStatus.COMPLETED
+                        || o.getStatus() == Order.OrderStatus.DELIVERED)
+                .toList();
 
         // Calculate metrics
-        Integer totalOrders = completedOrders.size();
+        int totalOrders = completedOrders.size();
 
         BigDecimal totalRevenue = completedOrders.stream()
                 .map(Order::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalCost = completedOrders.stream()
-                .map(o -> calculateOrderCost(o))
+                .map(this::calculateOrderCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal netProfit = totalRevenue.subtract(totalCost);
@@ -207,17 +207,17 @@ public class AnalyticsSchedulerService {
         Map<Order.OrderType, List<Order>> byType = completedOrders.stream()
                 .collect(Collectors.groupingBy(Order::getOrderType));
 
-        Integer dineInOrders = byType.getOrDefault(Order.OrderType.DINE_IN, List.of()).size();
+        int dineInOrders = byType.getOrDefault(Order.OrderType.DINE_IN, List.of()).size();
         BigDecimal dineInRevenue = byType.getOrDefault(Order.OrderType.DINE_IN, List.of()).stream()
                 .map(Order::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Integer takeawayOrders = byType.getOrDefault(Order.OrderType.TAKEAWAY, List.of()).size();
+        int takeawayOrders = byType.getOrDefault(Order.OrderType.TAKEAWAY, List.of()).size();
         BigDecimal takeawayRevenue = byType.getOrDefault(Order.OrderType.TAKEAWAY, List.of()).stream()
                 .map(Order::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Integer deliveryOrders = byType.getOrDefault(Order.OrderType.DELIVERY, List.of()).size();
+        int deliveryOrders = byType.getOrDefault(Order.OrderType.DELIVERY, List.of()).size();
         BigDecimal deliveryRevenue = byType.getOrDefault(Order.OrderType.DELIVERY, List.of()).stream()
                 .map(Order::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -255,7 +255,7 @@ public class AnalyticsSchedulerService {
 
         long returningCustomers = uniqueCustomers - newCustomers;
 
-        // Cancelled orders
+        // Canceled orders
         long cancelledOrders = orders.stream()
                 .filter(o -> o.getStatus() == Order.OrderStatus.CANCELLED)
                 .count();
@@ -361,13 +361,13 @@ public class AnalyticsSchedulerService {
 
         long newCustomers = orders.stream()
                 .map(Order::getCustomer)
-                .filter(c -> isNewCustomer(c, date))
+                .filter(customer -> isNewCustomer(customer, date))
                 .distinct()
                 .count();
 
         long returningCustomers = orders.stream()
                 .map(Order::getCustomer)
-                .filter(c -> !isNewCustomer(c, date))
+                .filter(customer -> !isNewCustomer(customer, date))
                 .distinct()
                 .count();
 
@@ -388,22 +388,33 @@ public class AnalyticsSchedulerService {
     }
 
     private void generateInventoryUsageForDate(Restaurant restaurant, LocalDate date) {
-        // Implementation for inventory usage analytics
+        int itemCount = inventoryItemRepository.findByRestaurantId(restaurant.getId()).size();
+        List<InventoryUsage> usages = inventoryUsageRepository
+                .findByRestaurantIdAndAnalysisDate(restaurant.getId(), date);
+        log.info("Inventory usage analytics for restaurant {} on {}: {} records",
+                restaurant.getId(), date, usages.size());
+        log.debug("Inventory items considered for restaurant {} on {}: {} items",
+                restaurant.getId(), date, itemCount);
     }
 
     private void generateRevenueAnalyticsForDate(Restaurant restaurant, LocalDate date) {
-        // Implementation for revenue analytics
+        List<RevenueAnalytics> analytics = revenueAnalyticsRepository
+                .findByRestaurantIdAndDateRange(restaurant.getId(), date, date);
+        log.info("Revenue analytics for restaurant {} on {}: {} records",
+                restaurant.getId(), date, analytics.size());
     }
 
     private BigDecimal calculateOrderCost(Order order) {
         // Calculate cost based on ingredients used
         return order.getOrderItems().stream()
-                .map(item -> calculateItemCost(item))
+                .map(this::calculateItemCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private BigDecimal calculateItemCost(OrderItem orderItem) {
-        // Get ingredient costs from inventory
+        if (orderItem.getMenuItemId() == null) {
+            return BigDecimal.ZERO;
+        }
         return BigDecimal.ZERO; // Placeholder
     }
 

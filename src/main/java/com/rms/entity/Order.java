@@ -155,6 +155,7 @@ public class Order {
         PREPARING,      // Kitchen is preparing
         READY,          // Order ready for pickup/delivery
         OUT_FOR_DELIVERY, // Delivery man picked up
+        DELIVERED,      // Order delivered
         COMPLETED,      // Order delivered/picked up
         CANCELLED       // Order cancelled
     }
@@ -163,5 +164,9 @@ public class Order {
         PENDING,
         PAID,
         REFUNDED
+    }
+
+    public Payment getPayment() {
+        return payments.isEmpty() ? null : payments.get(0);
     }
 }

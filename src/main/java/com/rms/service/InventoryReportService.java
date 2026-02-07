@@ -31,7 +31,7 @@ public class InventoryReportService {
 
     @Transactional(readOnly = true)
     public InventoryReportResponse generateInventoryReport(UserPrincipal currentUser) {
-        log.info("Generating inventory report for restaurant {}", currentUser.getRestaurantId());
+        log.info("Generating an inventory report for restaurant {}", currentUser.getRestaurantId());
 
         List<InventoryItem> allItems = inventoryRepository
                 .findByRestaurantIdAndIsActive(currentUser.getRestaurantId(), true);
@@ -71,7 +71,7 @@ public class InventoryReportService {
                     return summary;
                 })
                 .sorted((a, b) -> b.getTotalValue().compareTo(a.getTotalValue()))
-                .collect(Collectors.toList());
+                .toList();
         report.setCategorySummaries(categorySummaries);
 
         // Top value items
@@ -79,7 +79,7 @@ public class InventoryReportService {
                 .sorted((a, b) -> b.calculateTotalValue().compareTo(a.calculateTotalValue()))
                 .limit(10)
                 .map(this::mapToInventoryItemResponse)
-                .collect(Collectors.toList());
+                .toList();
         report.setTopValueItems(topValueItems);
 
         // Recently updated
@@ -89,7 +89,7 @@ public class InventoryReportService {
                 .getContent()
                 .stream()
                 .map(this::mapToInventoryItemResponse)
-                .collect(Collectors.toList());
+                .toList();
         report.setRecentlyUpdated(recentlyUpdated);
 
         log.info("Inventory report generated: {} total items, ${} total value",
@@ -118,7 +118,7 @@ public class InventoryReportService {
 
         return transactions.stream()
                 .map(this::mapToStockTransactionResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private InventoryItemResponse mapToInventoryItemResponse(InventoryItem item) {
