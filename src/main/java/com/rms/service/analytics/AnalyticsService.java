@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,7 @@ public class AnalyticsService {
     private final MenuItemRepository menuItemRepository;
     private final UserRepository userRepository;
     private final InventoryItemRepository inventoryItemRepository;
+    private final Map<String, ReportExportResponse> exportReports = new ConcurrentHashMap<>();
 
     // ==================== Sales Reports ====================
 
@@ -68,6 +70,113 @@ public class AnalyticsService {
                 .returningCustomers(report.getReturningCustomers())
                 .cancelledOrders(report.getCancelledOrders())
                 .refundedAmount(report.getRefundedAmount())
+                .build();
+    }
+
+    // ==================== Dashboard ====================
+
+    public DashboardSummaryResponse getDashboardSummary(Long restaurantId) {
+        LocalDate today = LocalDate.now();
+        SalesReport report = salesReportRepository
+                .findByRestaurantIdAndReportDateAndPeriodType(
+                        restaurantId, today, SalesReport.PeriodType.DAILY)
+                .orElse(null);
+
+        BigDecimal todayRevenue = report != null ? safe(report.getTotalRevenue()) : BigDecimal.ZERO;
+        Integer todayOrders = report != null ? safe(report.getTotalOrders()) : 0;
+        BigDecimal avgOrderValue = report != null ? safe(report.getAverageOrderValue()) : BigDecimal.ZERO;
+        BigDecimal todayProfit = report != null ? safe(report.getNetRevenue()) : BigDecimal.ZERO;
+
+        BigDecimal revenueYesterday = safe(salesReportRepository.sumRevenueByRestaurantAndPeriod(
+                restaurantId, today.minusDays(1), today.minusDays(1)));
+        BigDecimal revenueLastWeek = safe(salesReportRepository.sumRevenueByRestaurantAndPeriod(
+                restaurantId, today.minusWeeks(1), today.minusDays(1)));
+        BigDecimal revenueLastMonth = safe(salesReportRepository.sumRevenueByRestaurantAndPeriod(
+                restaurantId, today.minusMonths(1), today.minusDays(1)));
+
+        List<Order> activeOrders = orderRepository.findByRestaurantIdAndStatusIn(
+                restaurantId,
+                List.of(Order.OrderStatus.CONFIRMED, Order.OrderStatus.PREPARING, Order.OrderStatus.READY));
+
+        int pendingOrders = safe(orderRepository
+                .countByRestaurantIdAndStatus(restaurantId, Order.OrderStatus.PENDING))
+                .intValue();
+
+        int completedToday = safe(orderRepository
+                .countByRestaurantIdAndStatus(restaurantId, Order.OrderStatus.COMPLETED))
+                .intValue();
+
+        List<PopularItemResponse> topItems = getPopularItems(restaurantId, "MONTH", 5);
+
+        List<InventoryItem> inventoryItems =
+                inventoryItemRepository.findByRestaurantIdAndIsActive(restaurantId, true);
+
+        int lowStockAlerts = (int) inventoryItems.stream()
+                .filter(item -> item.getMinimumQuantity() != null
+                        && item.getCurrentQuantity().compareTo(item.getMinimumQuantity()) <= 0)
+                .count();
+        int outOfStockItems = (int) inventoryItems.stream()
+                .filter(item -> item.getCurrentQuantity().compareTo(BigDecimal.ZERO) == 0)
+                .count();
+
+        return DashboardSummaryResponse.builder()
+                .date(today)
+                .todayRevenue(todayRevenue)
+                .todayOrders(todayOrders)
+                .todayProfit(todayProfit)
+                .avgOrderValue(avgOrderValue)
+                .revenueVsYesterday(todayRevenue.subtract(revenueYesterday))
+                .revenueVsLastWeek(todayRevenue.subtract(revenueLastWeek))
+                .revenueVsLastMonth(todayRevenue.subtract(revenueLastMonth))
+                .activeOrders(activeOrders.size())
+                .pendingOrders(pendingOrders)
+                .completedToday(completedToday)
+                .topItems(topItems)
+                .topCustomers(Collections.emptyList())
+                .lowStockAlerts(lowStockAlerts)
+                .outOfStockItems(outOfStockItems)
+                .overdueOrders(0)
+                .build();
+    }
+
+    // ==================== Performance Metrics ====================
+
+    public PerformanceMetricsResponse getPerformanceMetrics(Long restaurantId, LocalDate date) {
+        SalesReport report = salesReportRepository
+                .findByRestaurantIdAndReportDateAndPeriodType(
+                        restaurantId, date, SalesReport.PeriodType.DAILY)
+                .orElse(null);
+
+        BigDecimal totalRevenue = report != null ? safe(report.getTotalRevenue()) : BigDecimal.ZERO;
+        BigDecimal averageOrderValue = report != null ? safe(report.getAverageOrderValue()) : BigDecimal.ZERO;
+        Integer totalOrders = report != null ? safe(report.getTotalOrders()) : 0;
+
+        BigDecimal grossProfit = report != null ? safe(report.getNetRevenue()) : BigDecimal.ZERO;
+        BigDecimal netProfit = grossProfit;
+        BigDecimal profitMargin = totalRevenue.compareTo(BigDecimal.ZERO) > 0
+                ? netProfit.divide(totalRevenue, 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100"))
+                : BigDecimal.ZERO;
+
+        return PerformanceMetricsResponse.builder()
+                .date(date)
+                .totalOrders(totalOrders)
+                .orderFulfillmentRate(BigDecimal.ZERO)
+                .avgPreparationTime(BigDecimal.ZERO)
+                .avgDeliveryTime(BigDecimal.ZERO)
+                .onTimeDeliveryRate(BigDecimal.ZERO)
+                .totalCustomers(report != null ? safe(report.getUniqueCustomers()) : 0)
+                .customerSatisfactionScore(BigDecimal.ZERO)
+                .customerRetentionRate(BigDecimal.ZERO)
+                .repeatOrderRate(BigDecimal.ZERO)
+                .totalRevenue(totalRevenue)
+                .grossProfit(grossProfit)
+                .netProfit(netProfit)
+                .profitMargin(profitMargin)
+                .averageOrderValue(averageOrderValue)
+                .tableTurnoverRate(BigDecimal.ZERO)
+                .inventoryTurnoverRate(BigDecimal.ZERO)
+                .labourCostPercentage(BigDecimal.ZERO)
+                .foodCostPercentage(BigDecimal.ZERO)
                 .build();
     }
 
@@ -443,6 +552,63 @@ public class AnalyticsService {
                 .build();
     }
 
+    // ==================== Hourly Analytics ====================
+
+    public HourlyAnalyticsResponse getHourlyAnalytics(Long restaurantId, LocalDate date) {
+        List<HourlyBreakdown> hourlyData = new ArrayList<>();
+        for (int hour = 0; hour < 24; hour++) {
+            hourlyData.add(HourlyBreakdown.builder()
+                    .hour(hour)
+                    .orderCount(0)
+                    .revenue(BigDecimal.ZERO)
+                    .customerCount(0)
+                    .avgOrderValue(BigDecimal.ZERO)
+                    .build());
+        }
+
+        return HourlyAnalyticsResponse.builder()
+                .date(date)
+                .hourlyData(hourlyData)
+                .peakHour(0)
+                .slowestHour(0)
+                .peakHourRevenue(BigDecimal.ZERO)
+                .build();
+    }
+
+    // ==================== Export ====================
+
+    public ReportExportResponse exportReport(Long restaurantId, ReportExportRequest request) {
+        String reportId = UUID.randomUUID().toString();
+        String format = request.getFormat() != null ? request.getFormat() : "CSV";
+        String fileName = String.format("%s_%s.%s",
+                request.getReportType() != null ? request.getReportType() : "report",
+                LocalDateTime.now().toLocalDate(),
+                format.toLowerCase());
+
+        ReportExportResponse response = ReportExportResponse.builder()
+                .reportId(reportId)
+                .fileName(fileName)
+                .downloadUrl(null)
+                .fileSize(null)
+                .format(format)
+                .generatedAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusDays(7))
+                .build();
+
+        exportReports.put(reportId, response);
+        return response;
+    }
+
+    public ReportExportResponse getExportStatus(String reportId) {
+        return exportReports.getOrDefault(reportId,
+                ReportExportResponse.builder()
+                        .reportId(reportId)
+                        .format(null)
+                        .generatedAt(null)
+                        .expiresAt(null)
+                        .build());
+    }
+
     // ==================== Helper Methods ====================
 
     private SalesReport generateDailySalesReport(Long restaurantId, LocalDate date) {
@@ -700,5 +866,17 @@ public class AnalyticsService {
 
     public enum CustomerSegment {
         VIP, REGULAR, OCCASIONAL, AT_RISK, LOST
+    }
+
+    private BigDecimal safe(BigDecimal value) {
+        return value != null ? value : BigDecimal.ZERO;
+    }
+
+    private Integer safe(Integer value) {
+        return value != null ? value : 0;
+    }
+
+    private Long safe(Long value) {
+        return value != null ? value : 0L;
     }
 }
