@@ -115,5 +115,36 @@ public class OrderSettlement extends BaseEntity {
                 .subtract(this.refundAmount)
                 .add(this.adjustmentAmount);
     }
-}
 
+    public BigDecimal getNetAmount() {
+        return netAmount;
+    }
+
+    public BigDecimal getOrderAmount() {
+        return orderAmount;
+    }
+
+    public BigDecimal getCommissionAmount() {
+        return commissionAmount;
+    }
+
+    public BigDecimal getPlatformFee() {
+        return platformFee;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public BigDecimal getAdjustmentAmount() {
+        return adjustmentAmount;
+    }
+
+    public void setPayout(RestaurantPayout payout) {
+        this.payout = payout;
+    }
+
+    public void setSettlementStatus(SettlementStatus settlementStatus) {
+        this.settlementStatus = settlementStatus;
+    }
+}

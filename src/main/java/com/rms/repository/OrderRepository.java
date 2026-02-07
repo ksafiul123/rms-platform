@@ -29,9 +29,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCustomerId(Long customerId, Pageable pageable);
 
+    List<Order> findByCustomerId(Long customerId);
+
     Page<Order> findByCustomerIdAndRestaurantId(Long customerId, Long restaurantId, Pageable pageable);
 
+    List<Order> findByRestaurantIdAndStatusAndOrderType(
+            Long restaurantId, Order.OrderStatus status, Order.OrderType orderType);
+
+    List<Order> findByRestaurantIdAndStatusInOrderByPriorityDescCreatedAtAsc(
+            Long restaurantId, List<Order.OrderStatus> statuses);
+
     Page<Order> findByDeliveryManId(Long deliveryManId, Pageable pageable);
+
+    List<Order> findByRestaurantIdAndCreatedAtBetween(
+            Long restaurantId, LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
             "AND o.createdAt BETWEEN :startDate AND :endDate")
@@ -48,6 +59,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("statuses") List<Order.OrderStatus> statuses
     );
 
+    @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
+            "AND o.status IN ('COMPLETED', 'DELIVERED') " +
+            "AND o.createdAt BETWEEN :startDate AND :endDate")
+    List<Order> findCompletedByRestaurantIdAndDateRange(
+            @Param("restaurantId") Long restaurantId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query("SELECT o FROM Order o WHERE o.restaurantId = :restaurantId " +
+            "AND o.status IN ('CONFIRMED', 'PREPARING', 'READY')")
+    List<Order> findActiveOrdersForDisplay(@Param("restaurantId") Long restaurantId);
+
     @Query("SELECT COUNT(o) FROM Order o WHERE o.restaurantId = :restaurantId " +
             "AND o.status = :status")
     Long countByRestaurantIdAndStatus(
@@ -55,6 +79,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("status") Order.OrderStatus status
     );
 
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.customerId = :customerId")
+    int countByCustomerId(@Param("customerId") Long customerId);
+
+    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o " +
+            "WHERE o.customerId = :customerId AND o.paymentStatus = 'PAID'")
+    java.math.BigDecimal calculateTotalSpentByCustomer(@Param("customerId") Long customerId);
+
+    @Query("SELECT COALESCE(AVG(o.totalAmount), 0) FROM Order o " +
+            "WHERE o.customerId = :customerId AND o.paymentStatus = 'PAID'")
+    java.math.BigDecimal calculateAvgOrderValueByCustomer(@Param("customerId") Long customerId);
+
+    @Query("SELECT MAX(o.createdAt) FROM Order o WHERE o.customerId = :customerId")
+    LocalDateTime findLastOrderDateByCustomer(@Param("customerId") Long customerId);
+
     boolean existsByOrderNumber(String orderNumber);
 }
-

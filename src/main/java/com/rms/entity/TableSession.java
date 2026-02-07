@@ -112,4 +112,16 @@ public class TableSession {
     public boolean isActive() {
         return status == SessionStatus.ACTIVE;
     }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    public SessionStatus getStatus() {
+        return status;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
 }

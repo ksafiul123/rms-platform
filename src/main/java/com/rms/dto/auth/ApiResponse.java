@@ -3,7 +3,6 @@ package com.rms.dto.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Schema(description = "Generic API response wrapper")
 public class ApiResponse<T> {
 
@@ -32,10 +30,23 @@ public class ApiResponse<T> {
     @JsonProperty("timestamp")
     private LocalDateTime timestamp;
 
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
+    }
+
     public static <T> ApiResponse<T> success(String message, T data) {
         return ApiResponse.<T>builder()
                 .success(true)
                 .message(message)
+                .data(data)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    public static <T> ApiResponse<T> success(T data) {
+        return ApiResponse.<T>builder()
+                .success(true)
+                .message("Operation successful")
                 .data(data)
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -47,5 +58,41 @@ public class ApiResponse<T> {
                 .message(message)
                 .timestamp(LocalDateTime.now())
                 .build();
+    }
+
+    public static class Builder<T> {
+        private Boolean success;
+        private String message;
+        private T data;
+        private LocalDateTime timestamp;
+
+        public Builder<T> success(Boolean success) {
+            this.success = success;
+            return this;
+        }
+
+        public Builder<T> message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public Builder<T> data(T data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder<T> timestamp(LocalDateTime timestamp) {
+            this.timestamp = timestamp;
+            return this;
+        }
+
+        public ApiResponse<T> build() {
+            ApiResponse<T> response = new ApiResponse<>();
+            response.success = this.success;
+            response.message = this.message;
+            response.data = this.data;
+            response.timestamp = this.timestamp;
+            return response;
+        }
     }
 }

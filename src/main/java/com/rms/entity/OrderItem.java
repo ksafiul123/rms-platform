@@ -32,6 +32,10 @@ public class OrderItem {
     @Column(name = "menu_item_id", nullable = false)
     private Long menuItemId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_item_id", insertable = false, updatable = false)
+    private MenuItem menuItem;
+
     @Column(name = "item_name", nullable = false, length = 200)
     private String itemName; // Snapshot at order time
 
@@ -55,6 +59,10 @@ public class OrderItem {
         modifier.setOrderItem(this);
     }
 
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     // Calculate subtotal
     public void calculateSubtotal() {
         BigDecimal modifierTotal = modifiers.stream()
@@ -62,5 +70,9 @@ public class OrderItem {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         this.subtotal = unitPrice.add(modifierTotal).multiply(new BigDecimal(quantity));
+    }
+
+    public BigDecimal getPrice() {
+        return unitPrice;
     }
 }

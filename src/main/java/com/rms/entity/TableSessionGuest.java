@@ -62,4 +62,8 @@ public class TableSessionGuest {
     public boolean isActive() {
         return status == GuestStatus.ACTIVE;
     }
+
+    public void setSession(TableSession session) {
+        this.session = session;
+    }
 }

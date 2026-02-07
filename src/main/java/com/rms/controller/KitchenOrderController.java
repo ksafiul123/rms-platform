@@ -54,7 +54,7 @@ public class KitchenOrderController {
         KitchenOrderResponse response =
                 kitchenOrderService.startPreparingOrder(orderId, userId, request);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "Order preparation started"));
+        return ResponseEntity.ok(ApiResponse.success("Order preparation started", response));
     }
 
     @PatchMapping("/orders/{orderId}/items/{itemId}/status")
@@ -85,7 +85,7 @@ public class KitchenOrderController {
         OrderDTO.OrderResponse response =
                 kitchenOrderService.markOrderReady(orderId, userId, request);
 
-        return ResponseEntity.ok(ApiResponse.success(response, "Order is ready"));
+        return ResponseEntity.ok(ApiResponse.success("Order is ready", response));
     }
 
     @GetMapping("/metrics")

@@ -269,7 +269,8 @@ public class AuthService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .token(tokenValue)
-                .expiryDate(LocalDateTime.now().plusMillis(tokenProvider.getRefreshTokenExpirationMs()))
+                .expiryDate(LocalDateTime.now()
+                        .plus(java.time.Duration.ofMillis(tokenProvider.getRefreshTokenExpirationMs())))
                 .isRevoked(false)
                 .build();
 

@@ -23,6 +23,8 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
 
     Page<InventoryItem> findByRestaurantId(Long restaurantId, Pageable pageable);
 
+    List<InventoryItem> findByRestaurantId(Long restaurantId);
+
     Page<InventoryItem> findByRestaurantIdAndCategory(
             Long restaurantId,
             InventoryItem.InventoryCategory category,
@@ -55,4 +57,3 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
 
     boolean existsByRestaurantIdAndItemCode(Long restaurantId, String itemCode);
 }
-

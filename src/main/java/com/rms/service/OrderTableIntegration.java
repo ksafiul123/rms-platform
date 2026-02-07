@@ -5,6 +5,7 @@ package com.rms.service;
 import com.rms.dto.order.OrderDTO.*;
 import com.rms.entity.*;
 import com.rms.exception.BadRequestException;
+import com.rms.exception.ForbiddenException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.TableSessionRepository;
 import com.rms.security.UserPrincipal;
@@ -72,8 +73,38 @@ public class OrderTableIntegration {
 
         return mapToOrderResponse(order);
     }
-}
 
+    private String generateOrderNumber() {
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String random = String.valueOf(new java.util.Random().nextInt(1000));
+        return "ORD" + timestamp.substring(timestamp.length() - 8) + random;
+    }
+
+    private OrderResponse mapToOrderResponse(Order order) {
+        OrderResponse response = new OrderResponse();
+        response.setId(order.getId());
+        response.setRestaurantId(order.getRestaurantId());
+        response.setCustomerId(order.getCustomerId());
+        response.setOrderNumber(order.getOrderNumber());
+        response.setOrderType(order.getOrderType());
+        response.setStatus(order.getStatus());
+        response.setTableNumber(order.getTableNumber());
+        response.setDeliveryAddress(order.getDeliveryAddress());
+        response.setDeliveryManId(order.getDeliveryManId());
+        response.setSubtotal(order.getSubtotal());
+        response.setTaxAmount(order.getTaxAmount());
+        response.setDeliveryFee(order.getDeliveryFee());
+        response.setDiscountAmount(order.getDiscountAmount());
+        response.setTotalAmount(order.getTotalAmount());
+        response.setSpecialInstructions(order.getSpecialInstructions());
+        response.setEstimatedReadyTime(order.getEstimatedReadyTime());
+        response.setActualReadyTime(order.getActualReadyTime());
+        response.setDeliveryTime(order.getDeliveryTime());
+        response.setCreatedAt(order.getCreatedAt());
+        response.setUpdatedAt(order.getUpdatedAt());
+        return response;
+    }
+}
 
 
 

@@ -10,6 +10,7 @@ import com.rms.exception.ForbiddenException;
 import com.rms.exception.InsufficientStockException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.OrderRepository;
+import com.rms.repository.TableSessionRepository;
 import com.rms.repository.UserRepository;
 import com.rms.security.UserPrincipal;
 import com.rms.service.InventoryService;
@@ -38,6 +39,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final MenuService menuService;
     private final InventoryService inventoryService;
+    private final TableSessionRepository sessionRepository;
 
     private static final BigDecimal TAX_RATE = new BigDecimal("0.10"); // 10% tax
     private static final BigDecimal DELIVERY_FEE = new BigDecimal("5.00");
@@ -361,6 +363,36 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    public Page<OrderResponse> getKitchenOrdersPage(UserPrincipal currentUser, Pageable pageable) {
+        Page<Order> orders = orderRepository.findByRestaurantId(
+                currentUser.getRestaurantId(), pageable);
+        return orders.map(this::mapToOrderResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Order findOrderByIdInternal(Long orderId, Long restaurantId) {
+        return findOrderByIdAndRestaurantId(orderId, restaurantId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> getOrdersForKitchen(UserPrincipal currentUser, Order.OrderStatus status) {
+        if (status != null) {
+            return orderRepository.findByRestaurantIdAndStatus(
+                    currentUser.getRestaurantId(), status, Pageable.unpaged()).getContent();
+        }
+        return orderRepository.findByRestaurantIdAndStatusIn(
+                currentUser.getRestaurantId(),
+                Arrays.asList(Order.OrderStatus.CONFIRMED, Order.OrderStatus.PREPARING));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> getActiveOrdersForRestaurant(Long restaurantId) {
+        return orderRepository.findByRestaurantIdAndStatusIn(
+                restaurantId,
+                Arrays.asList(Order.OrderStatus.CONFIRMED, Order.OrderStatus.PREPARING));
+    }
+
+    @Transactional(readOnly = true)
     public List<OrderStatusHistoryResponse> getOrderHistory(Long orderId, UserPrincipal currentUser) {
         Order order = findOrderWithAccess(orderId, currentUser);
 
@@ -391,7 +423,7 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
-    private OrderResponse mapToOrderResponse(Order order) {
+    public OrderResponse mapToOrderResponse(Order order) {
         OrderResponse response = new OrderResponse();
         response.setId(order.getId());
         response.setRestaurantId(order.getRestaurantId());
@@ -515,4 +547,3 @@ public class OrderService {
 
 
 }
-

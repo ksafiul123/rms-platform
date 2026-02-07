@@ -66,4 +66,18 @@ public class MenuItemInventory {
     public BigDecimal calculateRequiredQuantity(int menuItemCount) {
         return quantityRequired.multiply(new BigDecimal(menuItemCount));
     }
+
+    public Long getMenuItemId() {
+        return menuItem != null ? menuItem.getId() : null;
+    }
+
+    public void setMenuItemId(Long menuItemId) {
+        if (menuItemId == null) {
+            this.menuItem = null;
+            return;
+        }
+        MenuItem item = new MenuItem();
+        item.setId(menuItemId);
+        this.menuItem = item;
+    }
 }
