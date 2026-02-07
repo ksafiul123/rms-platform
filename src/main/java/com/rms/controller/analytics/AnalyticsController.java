@@ -4,7 +4,7 @@ import com.rms.dto.auth.ApiResponse;
 import com.rms.dto.analytics.*;
 import com.rms.security.annotation.RequirePermission;
 import com.rms.service.analytics.AnalyticsService;
-import com.rms.util.SecurityUtil;
+import com.rms.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -257,7 +257,7 @@ public class AnalyticsController {
         ReportExportResponse export =
                 analyticsService.exportReport(restaurantId, request);
 
-        return ResponseEntity.ok(ApiResponse.success(export, "Report export initiated"));
+        return ResponseEntity.ok(ApiResponse.success("Report export initiated", export));
     }
 
     @GetMapping("/export/{reportId}/status")

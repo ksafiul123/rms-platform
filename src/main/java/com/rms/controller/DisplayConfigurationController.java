@@ -1,8 +1,12 @@
 package com.rms.controller;
 
+import com.rms.dto.DisplayConfigRequest;
 import com.rms.dto.DisplayDataResponse;
+import com.rms.dto.DisplayTokenResponse;
+import com.rms.dto.DisplayUrlResponse;
 import com.rms.dto.auth.ApiResponse;
 import com.rms.entity.DisplayConfiguration;
+import com.rms.service.DisplayConfigurationService;
 import com.rms.security.annotation.RequirePermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +38,7 @@ public class DisplayConfigurationController {
             @RequestBody @Valid DisplayConfigRequest request) {
 
         DisplayConfiguration config = displayConfigService.updateConfig(restaurantId, request);
-        return ResponseEntity.ok(ApiResponse.success(config, "Display configuration updated"));
+        return ResponseEntity.ok(ApiResponse.success("Display configuration updated", config));
     }
 
     // Generate new display token
@@ -44,7 +48,7 @@ public class DisplayConfigurationController {
             @PathVariable Long restaurantId) {
 
         DisplayTokenResponse response = displayConfigService.regenerateToken(restaurantId);
-        return ResponseEntity.ok(ApiResponse.success(response, "Display token regenerated"));
+        return ResponseEntity.ok(ApiResponse.success("Display token regenerated", response));
     }
 
     // Get display URL
