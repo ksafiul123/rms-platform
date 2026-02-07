@@ -128,6 +128,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderStatusHistory> statusHistory = new ArrayList<>();
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -172,5 +175,12 @@ public class Order {
 
     public Payment getPayment() {
         return payments.isEmpty() ? null : payments.get(0);
+    }
+
+    public String getCustomerPhone() {
+        if (customer != null && customer.getPhoneNumber() != null) {
+            return customer.getPhoneNumber();
+        }
+        return null;
     }
 }
