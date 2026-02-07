@@ -29,6 +29,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCustomerId(Long customerId, Pageable pageable);
 
+    List<Order> findByCustomerId(Long customerId);
+
     Page<Order> findByCustomerIdAndRestaurantId(Long customerId, Long restaurantId, Pageable pageable);
 
     List<Order> findByRestaurantIdAndStatusInOrderByPriorityDescCreatedAtAsc(
@@ -69,6 +71,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("restaurantId") Long restaurantId,
             @Param("status") Order.OrderStatus status
     );
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.customerId = :customerId")
+    int countByCustomerId(@Param("customerId") Long customerId);
+
+    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o " +
+            "WHERE o.customerId = :customerId AND o.paymentStatus = 'PAID'")
+    java.math.BigDecimal calculateTotalSpentByCustomer(@Param("customerId") Long customerId);
+
+    @Query("SELECT COALESCE(AVG(o.totalAmount), 0) FROM Order o " +
+            "WHERE o.customerId = :customerId AND o.paymentStatus = 'PAID'")
+    java.math.BigDecimal calculateAvgOrderValueByCustomer(@Param("customerId") Long customerId);
+
+    @Query("SELECT MAX(o.createdAt) FROM Order o WHERE o.customerId = :customerId")
+    LocalDateTime findLastOrderDateByCustomer(@Param("customerId") Long customerId);
 
     boolean existsByOrderNumber(String orderNumber);
 }

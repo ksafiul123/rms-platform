@@ -2,6 +2,7 @@ package com.rms.service.analytics;
 
 import com.rms.dto.analytics.*;
 import com.rms.entity.*;
+import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -307,10 +308,10 @@ public class AnalyticsService {
 
         List<User> customers = userRepository.findCustomersByRestaurantId(restaurantId);
 
-        Map<CustomerSegment, List<CustomerSegmentData>> segments = new HashMap<>();
+        Map<com.rms.dto.analytics.CustomerSegment, List<CustomerSegmentData>> segments = new HashMap<>();
 
         for (User customer : customers) {
-            CustomerSegment segment = determineCustomerSegment(customer);
+            com.rms.dto.analytics.CustomerSegment segment = determineCustomerSegment(customer);
             CustomerSegmentData data = CustomerSegmentData.builder()
                     .customerId(customer.getId())
                     .customerName(customer.getFullName())
@@ -327,11 +328,11 @@ public class AnalyticsService {
         return CustomerSegmentationResponse.builder()
                 .totalCustomers(customers.size())
                 .segments(segments)
-                .vipCount(segments.getOrDefault(CustomerSegment.VIP, Collections.emptyList()).size())
-                .regularCount(segments.getOrDefault(CustomerSegment.REGULAR, Collections.emptyList()).size())
-                .occasionalCount(segments.getOrDefault(CustomerSegment.OCCASIONAL, Collections.emptyList()).size())
-                .atRiskCount(segments.getOrDefault(CustomerSegment.AT_RISK, Collections.emptyList()).size())
-                .lostCount(segments.getOrDefault(CustomerSegment.LOST, Collections.emptyList()).size())
+                .vipCount(segments.getOrDefault(com.rms.dto.analytics.CustomerSegment.VIP, Collections.emptyList()).size())
+                .regularCount(segments.getOrDefault(com.rms.dto.analytics.CustomerSegment.REGULAR, Collections.emptyList()).size())
+                .occasionalCount(segments.getOrDefault(com.rms.dto.analytics.CustomerSegment.OCCASIONAL, Collections.emptyList()).size())
+                .atRiskCount(segments.getOrDefault(com.rms.dto.analytics.CustomerSegment.AT_RISK, Collections.emptyList()).size())
+                .lostCount(segments.getOrDefault(com.rms.dto.analytics.CustomerSegment.LOST, Collections.emptyList()).size())
                 .build();
     }
 
@@ -460,7 +461,7 @@ public class AnalyticsService {
                             .inventoryItemId(item.getId())
                             .itemName(item.getName())
                             .currentQuantity(item.getCurrentQuantity())
-                            .unit(item.getUnit())
+                            .unit(item.getUnit() != null ? item.getUnit().name() : null)
                             .lastUsedDate(lastUsed)
                             .daysSinceLastUse(daysSinceUse)
                             .estimatedValue(item.getCurrentQuantity().multiply(item.getCostPerUnit()))
@@ -468,7 +469,7 @@ public class AnalyticsService {
                             .build();
                 })
                 .sorted(Comparator.comparing(SlowMovingItemResponse::getDaysSinceLastUse).reversed())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // ==================== Revenue Analytics ====================
@@ -660,21 +661,21 @@ public class AnalyticsService {
         };
     }
 
-    private CustomerSegment determineCustomerSegment(User customer) {
+    private com.rms.dto.analytics.CustomerSegment determineCustomerSegment(User customer) {
         int orderCount = getCustomerOrderCount(customer.getId());
         BigDecimal totalSpent = getCustomerTotalSpent(customer.getId());
         long daysSinceLastOrder = calculateDaysSinceLastOrder(customer.getId());
 
         if (orderCount >= 20 && totalSpent.compareTo(new BigDecimal("10000")) > 0) {
-            return CustomerSegment.VIP;
+            return com.rms.dto.analytics.CustomerSegment.VIP;
         } else if (orderCount >= 10 || daysSinceLastOrder < 14) {
-            return CustomerSegment.REGULAR;
+            return com.rms.dto.analytics.CustomerSegment.REGULAR;
         } else if (daysSinceLastOrder < 60) {
-            return CustomerSegment.OCCASIONAL;
+            return com.rms.dto.analytics.CustomerSegment.OCCASIONAL;
         } else if (daysSinceLastOrder < 180) {
-            return CustomerSegment.AT_RISK;
+            return com.rms.dto.analytics.CustomerSegment.AT_RISK;
         } else {
-            return CustomerSegment.LOST;
+            return com.rms.dto.analytics.CustomerSegment.LOST;
         }
     }
 
@@ -864,8 +865,16 @@ public class AnalyticsService {
                 .build();
     }
 
-    public enum CustomerSegment {
-        VIP, REGULAR, OCCASIONAL, AT_RISK, LOST
+    private BigDecimal safe(BigDecimal value) {
+        return value != null ? value : BigDecimal.ZERO;
+    }
+
+    private Integer safe(Integer value) {
+        return value != null ? value : 0;
+    }
+
+    private Long safe(Long value) {
+        return value != null ? value : 0L;
     }
 
     private BigDecimal safe(BigDecimal value) {

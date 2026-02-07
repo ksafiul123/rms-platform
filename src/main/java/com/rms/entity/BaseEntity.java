@@ -9,8 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Base entity class for multi-tenant support
@@ -36,4 +34,11 @@ public abstract class BaseEntity {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    @PrePersist
+    protected void onCreate() {
+        if (isActive == null) {
+            isActive = true;
+        }
+    }
 }

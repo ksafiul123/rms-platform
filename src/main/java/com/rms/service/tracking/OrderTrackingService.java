@@ -7,6 +7,7 @@ import com.rms.dto.tracking.OrderTimelineResponse;
 import com.rms.entity.DeliveryAssignment;
 import com.rms.entity.KitchenOrderItem;
 import com.rms.entity.Order;
+import com.rms.exception.UnauthorizedException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.DeliveryAssignmentRepository;
 import com.rms.repository.KitchenOrderItemRepository;
@@ -20,8 +21,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.rms.entity.DeliveryAssignment.DeliveryStatus.DELIVERED;
-import static com.rms.enums.OnboardingStatus.REJECTED;
 
 @Service
 @RequiredArgsConstructor
@@ -142,32 +141,33 @@ public class OrderTrackingService {
 
     private String getStatusDisplayText(Order.OrderStatus status) {
         return switch (status) {
-            case PLACED -> "Order Placed";
+            case PENDING -> "Order Placed";
             case CONFIRMED -> "Order Confirmed";
             case PREPARING -> "Preparing Your Food";
             case READY -> "Order Ready";
             case OUT_FOR_DELIVERY -> "Out for Delivery";
             case DELIVERED -> "Delivered";
+            case COMPLETED -> "Completed";
             case CANCELLED -> "Cancelled";
-            case REJECTED -> "Rejected";
         };
     }
 
     private int calculateProgressPercentage(Order.OrderStatus status) {
         return switch (status) {
-            case PLACED -> 10;
+            case PENDING -> 10;
             case CONFIRMED -> 25;
             case PREPARING -> 50;
             case READY -> 75;
             case OUT_FOR_DELIVERY -> 90;
             case DELIVERED -> 100;
-            case CANCELLED, REJECTED -> 0;
+            case COMPLETED -> 100;
+            case CANCELLED -> 0;
         };
     }
 
     private String getStatusMessage(Order order) {
         return switch (order.getStatus()) {
-            case PLACED -> "We've received your order and are reviewing it";
+            case PENDING -> "We've received your order and are reviewing it";
             case CONFIRMED -> "Your order has been confirmed and will be prepared soon";
             case PREPARING -> "Our chefs are preparing your delicious food";
             case READY -> order.getOrderType() == Order.OrderType.DINE_IN
@@ -175,18 +175,19 @@ public class OrderTrackingService {
                     : "Your order is ready for pickup";
             case OUT_FOR_DELIVERY -> "Your order is on the way to you";
             case DELIVERED -> "Enjoy your meal!";
+            case COMPLETED -> "Your order is complete";
             case CANCELLED -> "This order has been cancelled";
-            case REJECTED -> "We're sorry, we couldn't accept this order";
         };
     }
 
     private String getNextStatus(Order.OrderStatus currentStatus) {
         return switch (currentStatus) {
-            case PLACED -> "CONFIRMED";
+            case PENDING -> "CONFIRMED";
             case CONFIRMED -> "PREPARING";
             case PREPARING -> "READY";
             case READY -> "OUT_FOR_DELIVERY";
             case OUT_FOR_DELIVERY -> "DELIVERED";
+            case DELIVERED -> "COMPLETED";
             default -> null;
         };
     }
@@ -228,7 +229,7 @@ public class OrderTrackingService {
     }
 
     private boolean canCancelOrder(Order order) {
-        return order.getStatus() == Order.OrderStatus.PLACED
+        return order.getStatus() == Order.OrderStatus.PENDING
                 || order.getStatus() == Order.OrderStatus.CONFIRMED;
     }
 }

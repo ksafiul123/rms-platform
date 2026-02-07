@@ -32,6 +32,10 @@ public class Order {
     @Column(name = "restaurant_id", nullable = false)
     private Long restaurantId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
+    private Restaurant restaurant;
+
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
