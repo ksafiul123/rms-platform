@@ -3,6 +3,9 @@ package com.rms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Entity
 @jakarta.persistence.Table(name = "game_leaderboards", indexes = {
         @Index(name = "idx_leaderboard_period", columnList = "period_type, period_date"),
