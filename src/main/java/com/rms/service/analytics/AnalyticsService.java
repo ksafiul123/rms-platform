@@ -692,7 +692,8 @@ public class AnalyticsService {
     }
 
     private LocalDate getCustomerLastOrderDate(Long customerId) {
-        return orderRepository.findLastOrderDateByCustomer(customerId);
+        LocalDateTime lastOrder = orderRepository.findLastOrderDateByCustomer(customerId);
+        return lastOrder != null ? lastOrder.toLocalDate() : null;
     }
 
     private long calculateDaysSinceLastOrder(Long customerId) {
@@ -863,18 +864,6 @@ public class AnalyticsService {
                 .netProfit(analytics.getNetProfit())
                 .orderCount(analytics.getOrderCount())
                 .build();
-    }
-
-    private BigDecimal safe(BigDecimal value) {
-        return value != null ? value : BigDecimal.ZERO;
-    }
-
-    private Integer safe(Integer value) {
-        return value != null ? value : 0;
-    }
-
-    private Long safe(Long value) {
-        return value != null ? value : 0L;
     }
 
     private BigDecimal safe(BigDecimal value) {
