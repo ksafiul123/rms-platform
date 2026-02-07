@@ -3,7 +3,6 @@ package com.rms.dto.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Schema(description = "Generic API response wrapper")
 public class ApiResponse<T> {
 
@@ -31,6 +29,10 @@ public class ApiResponse<T> {
     @Schema(description = "Timestamp")
     @JsonProperty("timestamp")
     private LocalDateTime timestamp;
+
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
+    }
 
     public static <T> ApiResponse<T> success(String message, T data) {
         return ApiResponse.<T>builder()

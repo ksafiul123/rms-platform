@@ -12,4 +12,20 @@ public class PayoutRequest {
     private LocalDate periodEnd;
     private RestaurantPayout.PayoutMethod payoutMethod;
     private RestaurantPayout.PayoutType payoutType;
+
+    public LocalDate getPeriodStart() {
+        return periodStart;
+    }
+
+    public LocalDate getPeriodEnd() {
+        return periodEnd;
+    }
+
+    public RestaurantPayout.PayoutMethod getPayoutMethod() {
+        return payoutMethod;
+    }
+
+    public RestaurantPayout.PayoutType getPayoutType() {
+        return payoutType;
+    }
 }

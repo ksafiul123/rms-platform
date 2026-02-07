@@ -152,4 +152,96 @@ public class SalesReport extends BaseEntity {
         QUARTERLY,
         YEARLY
     }
+
+    public LocalDate getReportDate() {
+        return reportDate;
+    }
+
+    public Integer getTotalOrders() {
+        return totalOrders;
+    }
+
+    public BigDecimal getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public BigDecimal getNetProfit() {
+        return netProfit;
+    }
+
+    public BigDecimal getAverageOrderValue() {
+        return averageOrderValue;
+    }
+
+    public BigDecimal getTotalDiscounts() {
+        return totalDiscounts;
+    }
+
+    public BigDecimal getTotalTaxes() {
+        return totalTaxes;
+    }
+
+    public Integer getDineInOrders() {
+        return dineInOrders;
+    }
+
+    public BigDecimal getDineInRevenue() {
+        return dineInRevenue;
+    }
+
+    public Integer getTakeawayOrders() {
+        return takeawayOrders;
+    }
+
+    public BigDecimal getTakeawayRevenue() {
+        return takeawayRevenue;
+    }
+
+    public Integer getDeliveryOrders() {
+        return deliveryOrders;
+    }
+
+    public BigDecimal getDeliveryRevenue() {
+        return deliveryRevenue;
+    }
+
+    public BigDecimal getOnlinePayments() {
+        return onlinePayments;
+    }
+
+    public BigDecimal getCashPayments() {
+        return cashPayments;
+    }
+
+    public BigDecimal getWalletPayments() {
+        return walletPayments;
+    }
+
+    public Integer getUniqueCustomers() {
+        return uniqueCustomers;
+    }
+
+    public Integer getNewCustomers() {
+        return newCustomers;
+    }
+
+    public Integer getReturningCustomers() {
+        return returningCustomers;
+    }
+
+    public Integer getCancelledOrders() {
+        return cancelledOrders;
+    }
+
+    public BigDecimal getRefundedAmount() {
+        return refundedAmount;
+    }
+
+    public BigDecimal getNetRevenue() {
+        return netRevenue;
+    }
 }

@@ -172,4 +172,12 @@ public class InventoryItem {
     public BigDecimal calculateTotalValue() {
         return currentQuantity.multiply(costPerUnit);
     }
+
+    public BigDecimal getMinimumQuantity() {
+        return minimumQuantity;
+    }
+
+    public BigDecimal getCurrentQuantity() {
+        return currentQuantity;
+    }
 }

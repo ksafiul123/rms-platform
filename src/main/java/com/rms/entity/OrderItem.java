@@ -59,6 +59,10 @@ public class OrderItem {
         modifier.setOrderItem(this);
     }
 
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     // Calculate subtotal
     public void calculateSubtotal() {
         BigDecimal modifierTotal = modifiers.stream()
