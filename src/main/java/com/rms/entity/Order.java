@@ -176,4 +176,11 @@ public class Order {
     public Payment getPayment() {
         return payments.isEmpty() ? null : payments.get(0);
     }
+
+    public String getCustomerPhone() {
+        if (customer != null && customer.getPhoneNumber() != null) {
+            return customer.getPhoneNumber();
+        }
+        return null;
+    }
 }

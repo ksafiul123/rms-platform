@@ -33,6 +33,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCustomerIdAndRestaurantId(Long customerId, Long restaurantId, Pageable pageable);
 
+    List<Order> findByRestaurantIdAndStatusAndOrderType(
+            Long restaurantId, Order.OrderStatus status, Order.OrderType orderType);
+
     List<Order> findByRestaurantIdAndStatusInOrderByPriorityDescCreatedAtAsc(
             Long restaurantId, List<Order.OrderStatus> statuses);
 
