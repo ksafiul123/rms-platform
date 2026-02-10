@@ -35,8 +35,8 @@ public class LiveOrderStatusResponse {
     private String deliveryPartnerName;
     private String deliveryPartnerPhone;
     private String deliveryStatus;
-    private Double deliveryLatitude;
-    private Double deliveryLongitude;
+    private BigDecimal deliveryLatitude;
+    private BigDecimal deliveryLongitude;
     private BigDecimal distanceRemainingKm;
 
     private Boolean canCancel;

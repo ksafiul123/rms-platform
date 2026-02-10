@@ -155,8 +155,8 @@ public class DeliveryService {
         assignment.setPickedUpAt(LocalDateTime.now());
 
         if (location != null) {
-            assignment.setCurrentLatitude(location.getLatitude());
-            assignment.setCurrentLongitude(location.getLongitude());
+            assignment.setCurrentLatitude(toDouble(location.getLatitude()));
+            assignment.setCurrentLongitude(toDouble(location.getLongitude()));
             assignment.setLastLocationUpdate(LocalDateTime.now());
         }
 
@@ -185,12 +185,12 @@ public class DeliveryService {
 
         validateDeliveryPartner(assignment, deliveryPartnerId);
 
-        assignment.setCurrentLatitude(location.getLatitude());
-        assignment.setCurrentLongitude(location.getLongitude());
+        assignment.setCurrentLatitude(toDouble(location.getLatitude()));
+        assignment.setCurrentLongitude(toDouble(location.getLongitude()));
         assignment.setLastLocationUpdate(LocalDateTime.now());
 
         if (location.getDistanceRemainingKm() != null) {
-            assignment.setDistanceRemainingKm(BigDecimal.valueOf(location.getDistanceRemainingKm()));
+            assignment.setDistanceRemainingKm(location.getDistanceRemainingKm());
         }
 
         deliveryAssignmentRepository.save(assignment);
@@ -287,11 +287,19 @@ public class DeliveryService {
                 .estimatedDeliveryTime(assignment.getEstimatedDeliveryTime())
                 .customerAddress(assignment.getOrder().getDeliveryAddress())
                 .customerPhone(assignment.getOrder().getCustomerPhone())
-                .currentLatitude(assignment.getCurrentLatitude())
-                .currentLongitude(assignment.getCurrentLongitude())
+                .currentLatitude(toBigDecimal(assignment.getCurrentLatitude()))
+                .currentLongitude(toBigDecimal(assignment.getCurrentLongitude()))
                 .distanceRemainingKm(assignment.getDistanceRemainingKm())
                 .deliveryNotes(assignment.getDeliveryNotes())
                 .totalDeliveryTimeMinutes(assignment.getTotalDeliveryTimeMinutes())
                 .build();
+    }
+
+    private BigDecimal toBigDecimal(Double value) {
+        return value != null ? BigDecimal.valueOf(value) : null;
+    }
+
+    private Double toDouble(BigDecimal value) {
+        return value != null ? value.doubleValue() : null;
     }
 }
