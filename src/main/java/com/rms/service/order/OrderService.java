@@ -126,7 +126,6 @@ public class OrderService {
     public OrderResponse createSessionOrder(Long sessionId, CreateOrderRequest request,
                                             UserPrincipal currentUser) {
         log.info("Creating session order for session {} by user {}", sessionId, currentUser.getId());
-        final Long currentUserId = currentUser.getId();
 
         TableSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
@@ -137,7 +136,7 @@ public class OrderService {
 
         boolean isGuest = session.getGuests().stream()
                 .anyMatch(g -> g.getUserId() != null
-                        && g.getUserId().equals(currentUserId)
+                        && g.getUserId().equals(currentUser.getId())
                         && g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
 
         if (!isGuest && !currentUser.hasAnyRole("RESTAURANT_ADMIN", "ADMIN")) {
@@ -161,7 +160,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setRestaurantId(session.getRestaurantId());
-        order.setCustomerId(currentUserId);
+        order.setCustomerId(currentUser.getId());
         order.setOrderNumber(generateOrderNumber());
         order.setOrderType(Order.OrderType.DINE_IN);
         order.setStatus(Order.OrderStatus.PENDING);
@@ -194,7 +193,7 @@ public class OrderService {
         OrderStatusHistory history = new OrderStatusHistory();
         history.setFromStatus(null);
         history.setToStatus(Order.OrderStatus.PENDING);
-        history.setChangedBy(currentUserId);
+        history.setChangedBy(currentUser.getId());
         history.setNotes("Session order created");
         order.addStatusHistory(history);
 
@@ -209,14 +208,13 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderSummaryResponse> getSessionOrders(Long sessionId, UserPrincipal currentUser) {
         log.info("Getting orders for session {} by user {}", sessionId, currentUser.getId());
-        final Long currentUserId = currentUser.getId();
 
         TableSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
 
         boolean isGuest = session.getGuests().stream()
                 .anyMatch(g -> g.getUserId() != null
-                        && g.getUserId().equals(currentUserId)
+                        && g.getUserId().equals(currentUser.getId())
                         && g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
 
         boolean canManageRestaurant = currentUser.hasAnyRole("RESTAURANT_ADMIN", "ADMIN")
