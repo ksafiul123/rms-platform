@@ -1,14 +1,10 @@
 package com.rms.service.delivery;
 
-// DeliveryService.java
-//package com.rms.service.delivery;
-
 import com.rms.dto.delivery.*;
 import com.rms.entity.*;
 import com.rms.enums.RoleName;
 import com.rms.exception.*;
 import com.rms.repository.*;
-import com.rms.security.SecurityUtil;
 import com.rms.service.notification.NotificationService;
 import com.rms.service.tracking.OrderTimelineService;
 import lombok.RequiredArgsConstructor;
@@ -155,8 +151,8 @@ public class DeliveryService {
         assignment.setPickedUpAt(LocalDateTime.now());
 
         if (location != null) {
-            assignment.setCurrentLatitude(toDouble(location.getLatitude()));
-            assignment.setCurrentLongitude(toDouble(location.getLongitude()));
+            assignment.setCurrentLatitude(bigDecimalToDouble(location.getLatitude()));
+            assignment.setCurrentLongitude(bigDecimalToDouble(location.getLongitude()));
             assignment.setLastLocationUpdate(LocalDateTime.now());
         }
 
@@ -185,8 +181,8 @@ public class DeliveryService {
 
         validateDeliveryPartner(assignment, deliveryPartnerId);
 
-        assignment.setCurrentLatitude(toDouble(location.getLatitude()));
-        assignment.setCurrentLongitude(toDouble(location.getLongitude()));
+        assignment.setCurrentLatitude(bigDecimalToDouble(location.getLatitude()));
+        assignment.setCurrentLongitude(bigDecimalToDouble(location.getLongitude()));
         assignment.setLastLocationUpdate(LocalDateTime.now());
 
         if (location.getDistanceRemainingKm() != null) {
@@ -287,19 +283,22 @@ public class DeliveryService {
                 .estimatedDeliveryTime(assignment.getEstimatedDeliveryTime())
                 .customerAddress(assignment.getOrder().getDeliveryAddress())
                 .customerPhone(assignment.getOrder().getCustomerPhone())
-                .currentLatitude(toBigDecimal(assignment.getCurrentLatitude()))
-                .currentLongitude(toBigDecimal(assignment.getCurrentLongitude()))
+                .currentLatitude(assignment.getCurrentLatitude())
+                .currentLongitude(assignment.getCurrentLongitude())
                 .distanceRemainingKm(assignment.getDistanceRemainingKm())
                 .deliveryNotes(assignment.getDeliveryNotes())
                 .totalDeliveryTimeMinutes(assignment.getTotalDeliveryTimeMinutes())
                 .build();
     }
 
-    private BigDecimal toBigDecimal(Double value) {
-        return value != null ? BigDecimal.valueOf(value) : null;
+    // Convert BigDecimal to Double (for setting entity fields)
+    private BigDecimal bigDecimalToDouble(BigDecimal value) {
+        return BigDecimal.valueOf(value != null ? value.doubleValue() : null);
     }
 
-    private Double toDouble(BigDecimal value) {
-        return value != null ? value.doubleValue() : null;
+    // Convert Double to BigDecimal (for building DTOs)
+    private BigDecimal doubleToBigDecimal(Double value) {
+        BigDecimal bigDecimal = value != null ? BigDecimal.valueOf(value) : null;
+        return bigDecimal;
     }
 }
