@@ -615,6 +615,7 @@ public class OrderService {
      * Usage: Call this in OrderService.updateOrderStatus
      */
     public void validateSessionOrderUpdate(Order order, UserPrincipal currentUser) {
+        final Long currentUserId = currentUser.getId();
         if (order.getTableSession() != null) {
             TableSession session = order.getTableSession();
 
@@ -628,7 +629,7 @@ public class OrderService {
             if (currentUser.hasRole("CUSTOMER")) {
                 boolean isGuest = session.getGuests().stream()
                         .anyMatch(g -> g.getUserId() != null &&
-                                g.getUserId().equals(currentUser.getId()) &&
+                                g.getUserId().equals(currentUserId) &&
                                 g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
 
                 if (!isGuest) {
