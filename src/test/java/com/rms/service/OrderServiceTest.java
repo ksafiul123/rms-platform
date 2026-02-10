@@ -11,6 +11,7 @@ import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.OrderRepository;
 import com.rms.repository.UserRepository;
 import com.rms.security.UserPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.rms.service.menu.MenuService;
 import com.rms.service.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -390,12 +392,17 @@ class OrderServiceTest {
 
     // Helper methods
     private UserPrincipal createUserPrincipal(Long userId, Long restaurantId, List<String> roles) {
-        return UserPrincipal.builder()
-                .id(userId)
-                .email("user" + userId + "@test.com")
-                .restaurantId(restaurantId)
-                .roles(roles)
-                .build();
+        return new UserPrincipal(
+                userId,
+                "user" + userId + "@test.com",
+                "password",
+                restaurantId,
+                roles.stream()
+                        .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList()),
+                true
+        );
     }
 
     private Order createMockOrder(Long id, Order.OrderStatus status) {
