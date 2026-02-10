@@ -190,8 +190,7 @@ public class DeliveryService {
         assignment.setLastLocationUpdate(LocalDateTime.now());
 
         if (location.getDistanceRemainingKm() != null) {
-            assignment.setDistanceRemainingKm(
-                    BigDecimal.valueOf(location.getDistanceRemainingKm()));
+            assignment.setDistanceRemainingKm(BigDecimal.valueOf(location.getDistanceRemainingKm()));
         }
 
         deliveryAssignmentRepository.save(assignment);

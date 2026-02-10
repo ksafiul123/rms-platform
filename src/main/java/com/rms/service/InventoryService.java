@@ -250,16 +250,11 @@ public class InventoryService {
         List<MenuItemInventory> ingredients = menuItemInventoryRepository
                 .findByMenuItemId(menuItemId);
 
-        boolean isAvailable = true;
         List<IngredientAvailability> ingredientList = ingredients.stream()
                 .map(ingredient -> {
                     BigDecimal required = ingredient.calculateRequiredQuantity(quantity);
                     BigDecimal available = ingredient.getInventoryItem().getCurrentQuantity();
                     boolean hasEnough = available.compareTo(required) >= 0;
-
-                    if (!ingredient.getIsOptional() && !hasEnough) {
-                        isAvailable = false;
-                    }
 
                     IngredientAvailability avail = new IngredientAvailability();
                     avail.setInventoryItemId(ingredient.getInventoryItem().getId());
@@ -271,6 +266,9 @@ public class InventoryService {
                     return avail;
                 })
                 .collect(Collectors.toList());
+
+        boolean isAvailable = ingredientList.stream()
+                .allMatch(ingredient -> ingredient.getIsOptional() || ingredient.getIsAvailable());
 
         StockAvailabilityResponse response = new StockAvailabilityResponse();
         response.setMenuItemId(menuItemId);

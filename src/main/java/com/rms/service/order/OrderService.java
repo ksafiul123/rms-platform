@@ -122,6 +122,116 @@ public class OrderService {
         return mapToOrderResponse(savedOrder);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE, timeout = 10)
+    public OrderResponse createSessionOrder(Long sessionId, CreateOrderRequest request,
+                                            UserPrincipal currentUser) {
+        log.info("Creating session order for session {} by user {}", sessionId, currentUser.getId());
+        final Long currentUserId = currentUser.getId();
+
+        TableSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
+
+        if (session.getStatus() != TableSession.SessionStatus.ACTIVE) {
+            throw new BadRequestException("Session is not active");
+        }
+
+        boolean isGuest = session.getGuests().stream()
+                .anyMatch(g -> g.getUserId() != null
+                        && g.getUserId().equals(currentUserId)
+                        && g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
+
+        if (!isGuest && !currentUser.hasAnyRole("RESTAURANT_ADMIN", "ADMIN")) {
+            throw new ForbiddenException("You are not part of this session");
+        }
+
+        request.setOrderType(Order.OrderType.DINE_IN);
+        request.setTableNumber(session.getTable().getTableNumber());
+        request.setDeliveryAddress(null);
+
+        for (OrderItemRequest item : request.getItems()) {
+            boolean available = inventoryService.checkAndReserve(
+                    item.getMenuItemId(),
+                    item.getQuantity()
+            );
+            if (!available) {
+                throw new InsufficientStockException(
+                        String.format("Insufficient stock for menu item %s", item.getMenuItemId()));
+            }
+        }
+
+        Order order = new Order();
+        order.setRestaurantId(session.getRestaurantId());
+        order.setCustomerId(currentUserId);
+        order.setOrderNumber(generateOrderNumber());
+        order.setOrderType(Order.OrderType.DINE_IN);
+        order.setStatus(Order.OrderStatus.PENDING);
+        order.setTableNumber(session.getTable().getTableNumber());
+        order.setDeliveryAddress(null);
+        order.setSpecialInstructions(request.getSpecialInstructions());
+        order.setDiscountAmount(request.getDiscountAmount() != null
+                ? request.getDiscountAmount()
+                : BigDecimal.ZERO);
+        order.setTableSession(session);
+
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (OrderItemRequest itemRequest : request.getItems()) {
+            OrderItem orderItem = createOrderItem(itemRequest, session.getRestaurantId());
+            order.addOrderItem(orderItem);
+            subtotal = subtotal.add(orderItem.getSubtotal());
+        }
+
+        order.setSubtotal(subtotal);
+        order.setTaxAmount(subtotal.multiply(TAX_RATE).setScale(2, RoundingMode.HALF_UP));
+        order.setDeliveryFee(BigDecimal.ZERO);
+
+        BigDecimal total = order.getSubtotal()
+                .add(order.getTaxAmount())
+                .subtract(order.getDiscountAmount());
+        order.setTotalAmount(total.setScale(2, RoundingMode.HALF_UP));
+
+        order.setEstimatedReadyTime(LocalDateTime.now().plusMinutes(PREPARATION_TIME_MINUTES));
+
+        OrderStatusHistory history = new OrderStatusHistory();
+        history.setFromStatus(null);
+        history.setToStatus(Order.OrderStatus.PENDING);
+        history.setChangedBy(currentUserId);
+        history.setNotes("Session order created");
+        order.addStatusHistory(history);
+
+        Order savedOrder = orderRepository.save(order);
+        updateSessionTotal(savedOrder);
+
+        log.info("Session order {} created successfully for session {}",
+                savedOrder.getOrderNumber(), sessionId);
+        return mapToOrderResponse(savedOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderSummaryResponse> getSessionOrders(Long sessionId, UserPrincipal currentUser) {
+        log.info("Getting orders for session {} by user {}", sessionId, currentUser.getId());
+        final Long currentUserId = currentUser.getId();
+
+        TableSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
+
+        boolean isGuest = session.getGuests().stream()
+                .anyMatch(g -> g.getUserId() != null
+                        && g.getUserId().equals(currentUserId)
+                        && g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
+
+        boolean canManageRestaurant = currentUser.hasAnyRole("RESTAURANT_ADMIN", "ADMIN")
+                && Objects.equals(currentUser.getRestaurantId(), session.getRestaurantId());
+
+        if (!isGuest && !canManageRestaurant) {
+            throw new ForbiddenException("You are not part of this session");
+        }
+
+        return session.getOrders().stream()
+                .sorted(Comparator.comparing(Order::getCreatedAt).reversed())
+                .map(this::mapToOrderSummaryResponse)
+                .collect(Collectors.toList());
+    }
+
     private void validateOrderTypeRequirements(CreateOrderRequest request) {
         if (request.getOrderType() == Order.OrderType.DINE_IN) {
             if (request.getTableNumber() == null || request.getTableNumber().isBlank()) {
@@ -507,6 +617,7 @@ public class OrderService {
      * Usage: Call this in OrderService.updateOrderStatus
      */
     public void validateSessionOrderUpdate(Order order, UserPrincipal currentUser) {
+        final Long currentUserId = currentUser.getId();
         if (order.getTableSession() != null) {
             TableSession session = order.getTableSession();
 
@@ -520,7 +631,7 @@ public class OrderService {
             if (currentUser.hasRole("CUSTOMER")) {
                 boolean isGuest = session.getGuests().stream()
                         .anyMatch(g -> g.getUserId() != null &&
-                                g.getUserId().equals(currentUser.getId()) &&
+                                g.getUserId().equals(currentUserId) &&
                                 g.getStatus() == TableSessionGuest.GuestStatus.ACTIVE);
 
                 if (!isGuest) {
