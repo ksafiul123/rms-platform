@@ -20,12 +20,12 @@ public class DeliveryTrackingResponse {
     private String deliveryPartnerPhone;
     private String vehicleNumber;
 
-    private Double currentLatitude;
-    private Double currentLongitude;
-    private Double restaurantLatitude;
-    private Double restaurantLongitude;
-    private Double customerLatitude;
-    private Double customerLongitude;
+    private BigDecimal currentLatitude;
+    private BigDecimal currentLongitude;
+    private BigDecimal restaurantLatitude;
+    private BigDecimal restaurantLongitude;
+    private BigDecimal customerLatitude;
+    private BigDecimal customerLongitude;
 
     private BigDecimal distanceRemainingKm;
     private Integer estimatedMinutesRemaining;
@@ -39,8 +39,8 @@ public class DeliveryTrackingResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class LocationHistory {
-        private Double latitude;
-        private Double longitude;
+        private BigDecimal latitude;
+        private BigDecimal longitude;
         private LocalDateTime timestamp;
     }
 }
