@@ -27,8 +27,8 @@ public class DeliveryAssignmentResponse {
 
     private String customerAddress;
     private String customerPhone;
-    private Double currentLatitude;
-    private Double currentLongitude;
+    private BigDecimal currentLatitude;
+    private BigDecimal currentLongitude;
     private BigDecimal distanceRemainingKm;
 
     private String deliveryNotes;

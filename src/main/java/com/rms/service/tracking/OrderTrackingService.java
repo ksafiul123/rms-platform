@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -71,8 +72,8 @@ public class OrderTrackingService {
                 .deliveryPartnerName(delivery != null ? delivery.getDeliveryPartner().getFullName() : null)
                 .deliveryPartnerPhone(delivery != null ? delivery.getDeliveryPartner().getPhone() : null)
                 .deliveryStatus(delivery != null ? delivery.getStatus().name() : null)
-                .deliveryLatitude(delivery != null ? delivery.getCurrentLatitude() : null)
-                .deliveryLongitude(delivery != null ? delivery.getCurrentLongitude() : null)
+                 .deliveryLatitude(delivery != null ? toBigDecimal(delivery.getCurrentLatitude()) : null)
+                 .deliveryLongitude(delivery != null ? toBigDecimal(delivery.getCurrentLongitude()) : null)
                 .distanceRemainingKm(delivery != null ? delivery.getDistanceRemainingKm() : null)
                 .canCancel(canCancelOrder(order))
                 .canTrackDelivery(delivery != null && delivery.getStatus() == DeliveryAssignment.DeliveryStatus.PICKED_UP)
@@ -109,8 +110,8 @@ public class OrderTrackingService {
                 .orderNumber(order.getOrderNumber())
                 .deliveryPartnerName(delivery.getDeliveryPartner().getFullName())
                 .deliveryPartnerPhone(delivery.getDeliveryPartner().getPhone())
-                .currentLatitude(delivery.getCurrentLatitude())
-                .currentLongitude(delivery.getCurrentLongitude())
+                .currentLatitude(toBigDecimal(delivery.getCurrentLatitude()))
+                .currentLongitude(toBigDecimal(delivery.getCurrentLongitude()))
                 .distanceRemainingKm(delivery.getDistanceRemainingKm())
                 .estimatedMinutesRemaining(calculateDeliveryETA(delivery))
                 .lastLocationUpdate(delivery.getLastLocationUpdate())
@@ -226,6 +227,11 @@ public class OrderTrackingService {
         ).toMinutes();
 
         return minutes > 0 ? (int) minutes : 0;
+    }
+
+
+    private BigDecimal toBigDecimal(Double value) {
+        return value != null ? BigDecimal.valueOf(value) : null;
     }
 
     private boolean canCancelOrder(Order order) {
