@@ -11,6 +11,7 @@ import com.rms.exception.BadRequestException;
 import com.rms.exception.ResourceNotFoundException;
 import com.rms.repository.*;
 import com.rms.security.UserPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -304,12 +306,17 @@ class TableServiceTest {
 
     // Helper methods
     private UserPrincipal createUserPrincipal(Long userId, Long restaurantId, List<String> roles) {
-        return UserPrincipal.builder()
-                .id(userId)
-                .email("user" + userId + "@test.com")
-                .restaurantId(restaurantId)
-                .roles(roles)
-                .build();
+        return new UserPrincipal(
+                userId,
+                "user" + userId + "@test.com",
+                "password",
+                restaurantId,
+                roles.stream()
+                        .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList()),
+                true
+        );
     }
 
     private Table createMockTable(Long id) {
