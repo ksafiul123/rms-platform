@@ -24,7 +24,7 @@ public class SettlementAdjustment extends BaseEntity {
     private OrderSettlement settlement;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "adjustment_reference", nullable = false, unique = true, length = 100)

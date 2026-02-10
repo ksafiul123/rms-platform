@@ -22,7 +22,7 @@ import java.util.List;
 public class CommissionRule extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "rule_name", nullable = false, length = 100)

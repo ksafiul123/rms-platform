@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class DisplayConfiguration extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false, unique = true)
+    @JoinColumn(name = "restaurant_id", nullable = false, unique = true, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)

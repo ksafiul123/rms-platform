@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class SettlementReconciliation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "reconciliation_reference", nullable = false, unique = true, length = 100)

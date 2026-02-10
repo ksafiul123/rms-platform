@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class PromotionalCampaign extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "name", nullable = false, length = 200)

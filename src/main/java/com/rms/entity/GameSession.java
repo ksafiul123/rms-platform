@@ -30,7 +30,7 @@ public class GameSession extends BaseEntity {
     private GameType gameType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "session_code", nullable = false, unique = true, length = 20)
