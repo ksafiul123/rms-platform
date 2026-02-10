@@ -51,10 +51,10 @@ public class DeliveryAssignment extends BaseEntity {
     private LocalDateTime estimatedDeliveryTime;
 
     @Column(name = "current_latitude", precision = 10, scale = 8)
-    private Double currentLatitude;
+    private BigDecimal currentLatitude;
 
     @Column(name = "current_longitude", precision = 11, scale = 8)
-    private Double currentLongitude;
+    private BigDecimal currentLongitude;
 
     @Column(name = "last_location_update")
     private LocalDateTime lastLocationUpdate;

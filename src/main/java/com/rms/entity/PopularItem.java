@@ -58,31 +58,31 @@ public class PopularItem extends BaseEntity {
     @Builder.Default
     private BigDecimal revenueShare = BigDecimal.ZERO;
 
-    public LocalDate getAnalysisDate() {
-        return analysisDate;
-    }
-
-    public Integer getTotalQuantitySold() {
-        return totalQuantitySold;
-    }
-
-    public BigDecimal getTotalRevenue() {
-        return totalRevenue;
-    }
-
-    public Integer getOrderCount() {
-        return orderCount;
-    }
-
-    public BigDecimal getAveragePrice() {
-        return averagePrice;
-    }
-
-    public BigDecimal getRevenueShare() {
-        return revenueShare;
-    }
-
-    public MenuItem getMenuItem() {
-        return menuItem;
-    }
+//    public LocalDate getAnalysisDate() {
+//        return analysisDate;
+//    }
+//
+//    public Integer getTotalQuantitySold() {
+//        return totalQuantitySold;
+//    }
+//
+//    public BigDecimal getTotalRevenue() {
+//        return totalRevenue;
+//    }
+//
+//    public Integer getOrderCount() {
+//        return orderCount;
+//    }
+//
+//    public BigDecimal getAveragePrice() {
+//        return averagePrice;
+//    }
+//
+//    public BigDecimal getRevenueShare() {
+//        return revenueShare;
+//    }
+//
+//    public MenuItem getMenuItem() {
+//        return menuItem;
+//    }
 }
