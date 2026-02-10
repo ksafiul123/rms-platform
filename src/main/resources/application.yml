@@ -57,6 +57,8 @@ spring:
         cache:
           use_second_level_cache: false
           use_query_cache: false
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
         generate_statistics: true
         connection:
           provider_disables_autocommit: true

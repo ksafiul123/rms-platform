@@ -24,7 +24,7 @@ import java.util.List;
 public class RestaurantPayout extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "payout_reference", nullable = false, unique = true, length = 100)

@@ -25,7 +25,7 @@ public class CustomerWallet extends BaseEntity {
     private User customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "restaurant_id",  insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Column(name = "balance", nullable = false, precision = 10, scale = 2)

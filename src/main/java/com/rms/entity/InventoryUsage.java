@@ -28,7 +28,7 @@ import java.time.LocalDate;
 public class InventoryUsage extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.LAZY)

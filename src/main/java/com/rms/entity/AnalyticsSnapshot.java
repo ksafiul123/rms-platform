@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 public class AnalyticsSnapshot extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false, insertable=false, updatable=false)
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)

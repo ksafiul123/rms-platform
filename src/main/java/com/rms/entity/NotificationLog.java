@@ -82,7 +82,7 @@ public class NotificationLog extends BaseEntity {
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "restaurant_id", insertable=false, updatable=false)
     private Restaurant restaurant;
 
     public enum NotificationStatus {
