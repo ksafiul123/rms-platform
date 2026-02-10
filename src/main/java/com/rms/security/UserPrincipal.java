@@ -2,6 +2,7 @@ package com.rms.security;
 
 import com.rms.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class UserPrincipal implements UserDetails {
 
     private Long id;

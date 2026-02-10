@@ -154,6 +154,20 @@
 			<version>3.5.3</version>
 		</dependency>
 
+		<!-- The API -->
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<!-- The Implementation -->
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>3.10.8</version>
+		</dependency>
+
 	</dependencies>
 
 

@@ -35,11 +35,11 @@ public class OrderItemModifier {
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price; // Price at order time
 
-    public void setOrderItem(OrderItem orderItem) {
-        this.orderItem = orderItem;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
+//    public void setOrderItem(OrderItem orderItem) {
+//        this.orderItem = orderItem;
+//    }
+//
+//    public BigDecimal getPrice() {
+//        return price;
+//    }
 }

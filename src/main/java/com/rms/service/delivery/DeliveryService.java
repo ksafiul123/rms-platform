@@ -1,14 +1,10 @@
 package com.rms.service.delivery;
 
-// DeliveryService.java
-//package com.rms.service.delivery;
-
 import com.rms.dto.delivery.*;
 import com.rms.entity.*;
 import com.rms.enums.RoleName;
 import com.rms.exception.*;
 import com.rms.repository.*;
-import com.rms.security.SecurityUtil;
 import com.rms.service.notification.NotificationService;
 import com.rms.service.tracking.OrderTimelineService;
 import lombok.RequiredArgsConstructor;
@@ -155,8 +151,8 @@ public class DeliveryService {
         assignment.setPickedUpAt(LocalDateTime.now());
 
         if (location != null) {
-            assignment.setCurrentLatitude(location.getLatitude());
-            assignment.setCurrentLongitude(location.getLongitude());
+            assignment.setCurrentLatitude(bigDecimalToDouble(location.getLatitude()));
+            assignment.setCurrentLongitude(bigDecimalToDouble(location.getLongitude()));
             assignment.setLastLocationUpdate(LocalDateTime.now());
         }
 
@@ -185,12 +181,12 @@ public class DeliveryService {
 
         validateDeliveryPartner(assignment, deliveryPartnerId);
 
-        assignment.setCurrentLatitude(location.getLatitude());
-        assignment.setCurrentLongitude(location.getLongitude());
+        assignment.setCurrentLatitude(bigDecimalToDouble(location.getLatitude()));
+        assignment.setCurrentLongitude(bigDecimalToDouble(location.getLongitude()));
         assignment.setLastLocationUpdate(LocalDateTime.now());
 
         if (location.getDistanceRemainingKm() != null) {
-            assignment.setDistanceRemainingKm(BigDecimal.valueOf(location.getDistanceRemainingKm()));
+            assignment.setDistanceRemainingKm(location.getDistanceRemainingKm());
         }
 
         deliveryAssignmentRepository.save(assignment);
@@ -293,5 +289,16 @@ public class DeliveryService {
                 .deliveryNotes(assignment.getDeliveryNotes())
                 .totalDeliveryTimeMinutes(assignment.getTotalDeliveryTimeMinutes())
                 .build();
+    }
+
+    // Convert BigDecimal to Double (for setting entity fields)
+    private BigDecimal bigDecimalToDouble(BigDecimal value) {
+        return BigDecimal.valueOf(value != null ? value.doubleValue() : null);
+    }
+
+    // Convert Double to BigDecimal (for building DTOs)
+    private BigDecimal doubleToBigDecimal(Double value) {
+        BigDecimal bigDecimal = value != null ? BigDecimal.valueOf(value) : null;
+        return bigDecimal;
     }
 }

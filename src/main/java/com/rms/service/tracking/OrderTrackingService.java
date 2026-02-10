@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -226,6 +227,11 @@ public class OrderTrackingService {
         ).toMinutes();
 
         return minutes > 0 ? (int) minutes : 0;
+    }
+
+
+    private BigDecimal toBigDecimal(Double value) {
+        return value != null ? BigDecimal.valueOf(value) : null;
     }
 
     private boolean canCancelOrder(Order order) {

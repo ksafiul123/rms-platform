@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationUpdateRequest {
-    private Double latitude;
-    private Double longitude;
-    private Double distanceRemainingKm;
+    private java.math.BigDecimal latitude;
+    private java.math.BigDecimal longitude;
+    private java.math.BigDecimal distanceRemainingKm;
 }
