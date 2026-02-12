@@ -16,11 +16,14 @@ import java.util.Optional;
 @Repository
 public interface ItemVariantRepository extends JpaRepository<ItemVariant, Long> {
 
-    List<ItemVariant> findByMenuItemId(Long menuItemId);
+    @Query("SELECT iv FROM ItemVariant iv WHERE iv.menuItem.id = :menuItemId")
+    List<ItemVariant> findByMenuItemId(@Param("menuItemId") Long menuItemId);
 
-    List<ItemVariant> findByMenuItemIdAndIsAvailableTrue(Long menuItemId);
+    @Query("SELECT iv FROM ItemVariant iv WHERE iv.menuItem.id = :menuItemId AND iv.isAvailable = true")
+    List<ItemVariant> findByMenuItemIdAndIsAvailableTrue(@Param("menuItemId") Long menuItemId);
 
-    Optional<ItemVariant> findByMenuItemIdAndIsDefaultTrue(Long menuItemId);
+    @Query("SELECT iv FROM ItemVariant iv WHERE iv.menuItem.id = :menuItemId AND iv.isDefault = true")
+    Optional<ItemVariant> findByMenuItemIdAndIsDefaultTrue(@Param("menuItemId") Long menuItemId);
 
     @Modifying
     @Query("UPDATE ItemVariant iv SET iv.isDefault = false WHERE iv.menuItem.id = :menuItemId")

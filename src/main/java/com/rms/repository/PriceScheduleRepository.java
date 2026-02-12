@@ -14,7 +14,8 @@ import java.util.List;
 @Repository
 public interface PriceScheduleRepository extends JpaRepository<PriceSchedule, Long> {
 
-    List<PriceSchedule> findByMenuItemId(Long menuItemId);
+    @Query("SELECT ps FROM PriceSchedule ps WHERE ps.menuItem.id = :menuItemId")
+    List<PriceSchedule> findByMenuItemId(@Param("menuItemId") Long menuItemId);
 
     @Query("SELECT ps FROM PriceSchedule ps WHERE ps.menuItem.id = :menuItemId AND ps.isActive = true " +
             "AND (:dayOfWeek IS NULL OR ps.dayOfWeek IS NULL OR ps.dayOfWeek = :dayOfWeek) " +

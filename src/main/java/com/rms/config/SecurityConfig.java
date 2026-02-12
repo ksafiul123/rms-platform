@@ -56,10 +56,15 @@ public class SecurityConfig {
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/refresh-token",
                                 "/api/v1/auth/health",
+                                "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
+                                "/v3/api-docs",
                                 "/swagger-resources/**",
-                                "/webjars/**"
+                                "/swagger-resources",
+                                "/webjars/**",
+                                "/configuration/**",
+                                "/api-docs/**"
                         ).permitAll()
 
                         // Super Admin endpoints

@@ -14,7 +14,8 @@ import java.util.Optional;
 @Repository
 public interface OrderDisplaySnapshotRepository extends JpaRepository<OrderDisplaySnapshot, Long> {
 
-    Optional<OrderDisplaySnapshot> findByOrderId(Long orderId);
+    @Query("SELECT ods FROM OrderDisplaySnapshot ods WHERE ods.order.id = :orderId")
+    Optional<OrderDisplaySnapshot> findByOrderId(@Param("orderId") Long orderId);
 
     List<OrderDisplaySnapshot> findByRestaurantIdOrderByDisplayPositionAsc(Long restaurantId);
 

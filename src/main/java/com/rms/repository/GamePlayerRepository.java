@@ -11,9 +11,11 @@ import java.util.List;
 @Repository
 public interface GamePlayerRepository extends JpaRepository<GamePlayer, Long> {
 
-    List<GamePlayer> findByGameSessionId(Long gameSessionId);
+    @Query("SELECT gp FROM GamePlayer gp WHERE gp.gameSession.id = :gameSessionId")
+    List<GamePlayer> findByGameSessionId(@Param("gameSessionId") Long gameSessionId);
 
-    List<GamePlayer> findByUserIdOrderByJoinedAtDesc(Long userId);
+    @Query("SELECT gp FROM GamePlayer gp WHERE gp.user.id = :userId ORDER BY gp.joinedAt DESC")
+    List<GamePlayer> findByUserIdOrderByJoinedAtDesc(@Param("userId") Long userId);
 
     @Query("SELECT gp FROM GamePlayer gp " +
             "WHERE gp.gameSession.id = :sessionId " +

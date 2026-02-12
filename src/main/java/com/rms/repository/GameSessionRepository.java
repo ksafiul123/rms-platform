@@ -15,7 +15,8 @@ public interface GameSessionRepository extends JpaRepository<GameSession, Long> 
 
     Optional<GameSession> findBySessionCode(String sessionCode);
 
-    Optional<GameSession> findByTableSessionId(Long tableSessionId);
+    @Query("SELECT gs FROM GameSession gs WHERE gs.tableSession.id = :tableSessionId")
+    Optional<GameSession> findByTableSessionId(@Param("tableSessionId") Long tableSessionId);
 
     List<GameSession> findByStatus(GameSession.SessionStatus status);
 

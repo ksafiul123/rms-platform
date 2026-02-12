@@ -11,12 +11,15 @@ import java.util.List;
 @Repository
 public interface KitchenOrderItemRepository extends JpaRepository<KitchenOrderItem, Long> {
 
-    List<KitchenOrderItem> findByOrderId(Long orderId);
+    @Query("SELECT koi FROM KitchenOrderItem koi WHERE koi.order.id = :orderId")
+    List<KitchenOrderItem> findByOrderId(@Param("orderId") Long orderId);
 
+    @Query("SELECT koi FROM KitchenOrderItem koi WHERE koi.order.id = :orderId AND koi.status = :status")
     List<KitchenOrderItem> findByOrderIdAndStatus(
-            Long orderId, KitchenOrderItem.ItemStatus status);
+            @Param("orderId") Long orderId, @Param("status") KitchenOrderItem.ItemStatus status);
 
-    List<KitchenOrderItem> findByAssignedChefId(Long chefId);
+    @Query("SELECT koi FROM KitchenOrderItem koi WHERE koi.assignedChef.id = :chefId")
+    List<KitchenOrderItem> findByAssignedChefId(@Param("chefId") Long chefId);
 
     List<KitchenOrderItem> findByStation(String station);
 

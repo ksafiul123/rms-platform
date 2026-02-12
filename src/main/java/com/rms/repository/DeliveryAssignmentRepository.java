@@ -13,9 +13,11 @@ import java.util.Optional;
 @Repository
 public interface DeliveryAssignmentRepository extends JpaRepository<DeliveryAssignment, Long> {
 
-    Optional<DeliveryAssignment> findByOrderId(Long orderId);
+    @Query("SELECT da FROM DeliveryAssignment da WHERE da.order.id = :orderId")
+    Optional<DeliveryAssignment> findByOrderId(@Param("orderId") Long orderId);
 
-    List<DeliveryAssignment> findByDeliveryPartnerId(Long deliveryPartnerId);
+    @Query("SELECT da FROM DeliveryAssignment da WHERE da.deliveryPartner.id = :deliveryPartnerId")
+    List<DeliveryAssignment> findByDeliveryPartnerId(@Param("deliveryPartnerId") Long deliveryPartnerId);
 
     List<DeliveryAssignment> findByStatus(DeliveryAssignment.DeliveryStatus status);
 

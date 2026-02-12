@@ -14,7 +14,8 @@ import java.util.Optional;
 @Repository
 public interface OrderPreparationMetricsRepository extends JpaRepository<OrderPreparationMetrics, Long> {
 
-    Optional<OrderPreparationMetrics> findByOrderId(Long orderId);
+    @Query("SELECT m FROM OrderPreparationMetrics m WHERE m.order.id = :orderId")
+    Optional<OrderPreparationMetrics> findByOrderId(@Param("orderId") Long orderId);
 
     @Query("SELECT m FROM OrderPreparationMetrics m " +
             "WHERE m.order.restaurantId = :restaurantId " +

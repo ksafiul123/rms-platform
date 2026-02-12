@@ -3,6 +3,9 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
+  config:
+    activate:
+      on-profile: prod
 
 logging:
   level:
@@ -10,3 +13,8 @@ logging:
     org.springframework.web: WARN
   file:
     name: /var/log/rms/application.log
+
+app:
+  qr:
+    base-url: https://yourdomain.com
+    size: 400

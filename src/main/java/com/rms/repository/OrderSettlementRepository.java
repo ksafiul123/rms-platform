@@ -20,13 +20,16 @@ public interface OrderSettlementRepository extends JpaRepository<OrderSettlement
 
     Optional<OrderSettlement> findBySettlementReference(String settlementReference);
 
-    Optional<OrderSettlement> findByOrderId(Long orderId);
+    @Query("SELECT os FROM OrderSettlement os WHERE os.order.id = :orderId")
+    Optional<OrderSettlement> findByOrderId(@Param("orderId") Long orderId);
 
+    @Query("SELECT os FROM OrderSettlement os WHERE os.restaurant.id = :restaurantId ORDER BY os.settlementDate DESC")
     Page<OrderSettlement> findByRestaurantIdOrderBySettlementDateDesc(
-            Long restaurantId, Pageable pageable);
+            @Param("restaurantId") Long restaurantId, Pageable pageable);
 
+    @Query("SELECT os FROM OrderSettlement os WHERE os.restaurant.id = :restaurantId AND os.settlementStatus = :status")
     List<OrderSettlement> findByRestaurantIdAndSettlementStatus(
-            Long restaurantId, OrderSettlement.SettlementStatus status);
+            @Param("restaurantId") Long restaurantId, @Param("status") OrderSettlement.SettlementStatus status);
 
     @Query("SELECT s FROM OrderSettlement s " +
             "WHERE s.restaurant.id = :restaurantId " +

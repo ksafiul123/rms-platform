@@ -3,8 +3,16 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  config:
+    activate:
+      on-profile: dev
 
 logging:
   level:
     com.rms: DEBUG
     org.hibernate.SQL: DEBUG
+
+app:
+  qr:
+    base-url: http://localhost:8080
+    size: 300

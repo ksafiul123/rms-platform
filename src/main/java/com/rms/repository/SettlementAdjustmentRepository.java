@@ -17,7 +17,8 @@ public interface SettlementAdjustmentRepository extends JpaRepository<Settlement
 
     List<SettlementAdjustment> findByRestaurantIdOrderByCreatedAtDesc(Long restaurantId);
 
-    List<SettlementAdjustment> findBySettlementId(Long settlementId);
+    @Query("SELECT sa FROM SettlementAdjustment sa WHERE sa.settlement.id = :settlementId")
+    List<SettlementAdjustment> findBySettlementId(@Param("settlementId") Long settlementId);
 
     List<SettlementAdjustment> findByStatus(SettlementAdjustment.AdjustmentStatus status);
 

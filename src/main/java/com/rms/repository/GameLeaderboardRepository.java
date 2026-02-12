@@ -1,6 +1,7 @@
 package com.rms.repository;
 
 import com.rms.entity.GameLeaderboard;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +30,5 @@ public interface GameLeaderboardRepository extends JpaRepository<GameLeaderboard
             @Param("restaurantId") Long restaurantId,
             @Param("periodType") GameLeaderboard.PeriodType periodType,
             @Param("periodDate") LocalDate periodDate,
-            @Param("limit") int limit);
+            Pageable pageable);
 }

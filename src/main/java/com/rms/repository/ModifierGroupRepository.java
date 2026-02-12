@@ -21,9 +21,9 @@ public interface ModifierGroupRepository extends JpaRepository<ModifierGroup, Lo
 
     Boolean existsByRestaurantIdAndName(Long restaurantId, String name);
 
-    @Query("SELECT mg FROM ModifierGroup mg LEFT JOIN FETCH mg.options WHERE mg.id = :id")
+    @Query("SELECT mg FROM ModifierGroup mg WHERE mg.id = :id")
     Optional<ModifierGroup> findByIdWithOptions(@Param("id") Long id);
 
-    @Query("SELECT mg FROM ModifierGroup mg LEFT JOIN FETCH mg.options WHERE mg.restaurantId = :restaurantId AND mg.isActive = true ORDER BY mg.displayOrder")
+    @Query("SELECT mg FROM ModifierGroup mg WHERE mg.restaurantId = :restaurantId AND mg.isActive = true ORDER BY mg.displayOrder")
     List<ModifierGroup> findByRestaurantIdWithOptions(@Param("restaurantId") Long restaurantId);
 }

@@ -136,40 +136,17 @@ springdoc:
     display-request-duration: true
     disable-swagger-default-url: true
 
-# Management & Actuator (Optional - for monitoring)
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: when-authorized
-  metrics:
-    export:
-      prometheus:
-        enabled: true
+## Management & Actuator (Optional - for monitoring)
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,metrics,prometheus
+#  endpoint:
+#    health:
+#      show-details: when-authorized
+#  metrics:
+#    export:
+#      prometheus:
+#        enabled: true
 
----
-# Development profile
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-app:
-  qr:
-    base-url: http://localhost:8080
-    size: 300
-
----
-# Production profile
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-app:
-  qr:
-    base-url: https://yourdomain.com
-    size: 400
