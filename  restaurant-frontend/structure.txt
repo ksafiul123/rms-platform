@@ -1,0 +1,30 @@
+restaurant-frontend/
+├── src/
+│   ├── app/                          # Next.js App Router
+│   │   ├── (public)/                 # Public routes (no auth)
+│   │   │   ├── login/
+│   │   │   ├── register/
+│   │   │   └── layout.tsx
+│   │   ├── (protected)/              # Protected routes
+│   │   │   ├── dashboard/
+│   │   │   ├── menu/
+│   │   │   ├── orders/
+│   │   │   ├── inventory/
+│   │   │   └── layout.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/                    # Reusable UI components
+│   │   ├── ui/                       # Base UI components
+│   │   ├── forms/                    # Form components
+│   │   ├── layout/                   # Layout components
+│   │   └── shared/                   # Shared components
+│   ├── lib/                          # Core utilities
+│   │   ├── api/                      # API clients
+│   │   ├── auth/                     # Auth utilities
+│   │   ├── permissions/              # RBAC utilities
+│   │   └── utils/                    # Helper functions
+│   ├── types/                        # TypeScript types/interfaces
+│   ├── hooks/                        # Custom React hooks
+│   ├── contexts/                     # React Context providers
+│   ├── middleware.ts                 # Auth middleware
+│   └── config/                       # App configuration

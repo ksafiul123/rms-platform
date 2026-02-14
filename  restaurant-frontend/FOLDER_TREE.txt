@@ -1,0 +1,149 @@
+restaurant-frontend/
+│
+├── public/                                    # Static assets
+│   ├── images/                               # Image files
+│   ├── icons/                                # Icon files
+│   └── fonts/                                # Custom fonts
+│
+├── src/
+│   │
+│   ├── app/                                  # Next.js App Router
+│   │   │
+│   │   ├── (public)/                         # PUBLIC ROUTES (No auth required)
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx                  # Login page component
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx                  # Register page component
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.tsx                  # Forgot password page
+│   │   │   ├── reset-password/
+│   │   │   │   └── page.tsx                  # Reset password page
+│   │   │   └── layout.tsx                    # Layout for public routes
+│   │   │
+│   │   ├── (protected)/                      # PROTECTED ROUTES (Auth required)
+│   │   │   │
+│   │   │   ├── dashboard/                    # Dashboard routes
+│   │   │   │   ├── super-admin/
+│   │   │   │   │   └── page.tsx             # Super Admin dashboard
+│   │   │   │   ├── restaurant-admin/
+│   │   │   │   │   └── page.tsx             # Restaurant Admin dashboard
+│   │   │   │   ├── manager/
+│   │   │   │   │   └── page.tsx             # Manager dashboard
+│   │   │   │   ├── chef/
+│   │   │   │   │   └── page.tsx             # Chef dashboard
+│   │   │   │   ├── delivery/
+│   │   │   │   │   └── page.tsx             # Delivery Man dashboard
+│   │   │   │   ├── customer/
+│   │   │   │   │   └── page.tsx             # Customer dashboard
+│   │   │   │   └── page.tsx                 # Main dashboard (role redirect)
+│   │   │   │
+│   │   │   ├── menu/                         # Menu Management
+│   │   │   │   ├── categories/
+│   │   │   │   │   └── page.tsx             # Menu categories list
+│   │   │   │   ├── items/
+│   │   │   │   │   └── page.tsx             # Menu items list
+│   │   │   │   ├── modifiers/
+│   │   │   │   │   └── page.tsx             # Modifier groups
+│   │   │   │   └── page.tsx                 # Menu overview
+│   │   │   │
+│   │   │   ├── orders/                       # Order Management
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── page.tsx             # Order details page
+│   │   │   │   └── page.tsx                 # Orders list
+│   │   │   │
+│   │   │   ├── inventory/
+│   │   │   │   └── page.tsx                 # Inventory management
+│   │   │   │
+│   │   │   ├── users/
+│   │   │   │   └── page.tsx                 # Users management
+│   │   │   │
+│   │   │   ├── settings/
+│   │   │   │   └── page.tsx                 # Settings page
+│   │   │   │
+│   │   │   ├── analytics/
+│   │   │   │   └── page.tsx                 # Analytics dashboard
+│   │   │   │
+│   │   │   ├── payments/
+│   │   │   │   └── page.tsx                 # Payment management
+│   │   │   │
+│   │   │   ├── restaurant/
+│   │   │   │   └── page.tsx                 # Restaurant settings
+│   │   │   │
+│   │   │   └── layout.tsx                   # Layout for protected routes
+│   │   │
+│   │   ├── layout.tsx                        # Root layout with providers
+│   │   └── page.tsx                          # Home page (redirects)
+│   │
+│   ├── components/                           # Reusable Components
+│   │   ├── ui/                              # Base UI components (Button, Input, etc.)
+│   │   ├── forms/                           # Form components (FormInput, etc.)
+│   │   ├── layout/                          # Layout components (Sidebar, Navbar)
+│   │   ├── shared/                          # Shared components (Loading, Error)
+│   │   ├── dashboard/                       # Dashboard specific components
+│   │   ├── menu/                            # Menu specific components
+│   │   ├── orders/                          # Order specific components
+│   │   ├── inventory/                       # Inventory specific components
+│   │   ├── users/                           # User specific components
+│   │   ├── analytics/                       # Analytics components
+│   │   └── modals/                          # Modal components
+│   │
+│   ├── lib/                                 # Core Utilities
+│   │   │
+│   │   ├── api/                             # API Services Layer
+│   │   │   ├── client.ts                   # ⭐ Axios client with interceptors
+│   │   │   ├── auth.service.ts             # Auth API calls
+│   │   │   ├── menu.service.ts             # Menu API calls
+│   │   │   ├── order.service.ts            # Order API calls
+│   │   │   └── index.ts                    # Export all services
+│   │   │
+│   │   ├── auth/                            # Auth utilities
+│   │   │   └── index.ts                    # Auth helper functions
+│   │   │
+│   │   ├── permissions/                     # RBAC utilities
+│   │   │   └── index.ts                    # ⭐ Permission checking functions
+│   │   │
+│   │   ├── utils/                           # Helper functions
+│   │   │   └── index.ts                    # Common utilities (cn, formatDate, etc.)
+│   │   │
+│   │   └── validations/                     # Validation
+│   │       └── schemas.ts                  # Zod validation schemas
+│   │
+│   ├── types/                               # TypeScript Type Definitions
+│   │   ├── user.ts                         # User types (RoleName enum, User interface)
+│   │   ├── auth.ts                         # Auth types (LoginRequest, AuthResponse)
+│   │   ├── api.ts                          # API types (ApiResponse, ErrorResponse)
+│   │   ├── permission.ts                   # ⭐ Permission types (PermissionName type)
+│   │   ├── menu.ts                         # Menu types (MenuItem, MenuCategory)
+│   │   ├── order.ts                        # Order types (Order, OrderStatus enum)
+│   │   └── index.ts                        # Export all types
+│   │
+│   ├── contexts/                            # React Context Providers
+│   │   └── AuthContext.tsx                 # Authentication context
+│   │
+│   ├── hooks/                               # Custom React Hooks
+│   │   └── (future custom hooks)
+│   │
+│   ├── config/                              # App Configuration
+│   │   ├── api.config.ts                   # API endpoints & config
+│   │   └── routes.config.ts                # Route paths & access rules
+│   │
+│   ├── constants/                           # Constants
+│   │   ├── permissions.ts                  # ⭐ Permission constants & role mapping
+│   │   └── index.ts                        # Common constants (status colors, etc.)
+│   │
+│   ├── styles/                              # Global Styles
+│   │   └── globals.css                     # Global CSS with Tailwind
+│   │
+│   └── middleware.ts                        # Next.js middleware for auth protection
+│
+├── .env.local                               # Environment variables (local)
+├── .env.example                             # Environment variables template
+├── .gitignore                               # Git ignore rules
+├── next.config.js                           # Next.js configuration
+├── tailwind.config.ts                       # Tailwind CSS configuration
+├── postcss.config.js                        # PostCSS configuration
+├── tsconfig.json                            # TypeScript configuration
+├── package.json                             # Dependencies & scripts
+├── README.md                                # Project documentation
+├── STRUCTURE.md                             # Detailed structure explanation
+└── SETUP.md                                 # Quick setup guide
